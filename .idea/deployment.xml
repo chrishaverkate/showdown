@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" remoteFilesAllowedToDisappearOnAutoupload="false">
+    <serverData>
+      <paths name="Pico-cross (a4f9f496-5b2e-415a-ad19-1bc0c7edd7fa)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/tmp/tmp.JpXliBH5wS" local="$PROJECT_DIR$" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/build/release-pico" />
+            <excludedPath local="true" path="$PROJECT_DIR$/build/debug-local" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>
