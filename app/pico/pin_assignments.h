@@ -19,18 +19,43 @@ static const uint UART_TX = 0;
 static const uint UART_RX = 1;
 
 // SPI Lines
-static const uint SPI_0_MOSI = 16;
-static const uint SPI_0_CS = 17;
-static const uint SPI_0_SCK = 18;
-static const uint SPI_0_MISO = 19;
+//static const uint SPI_0_MOSI = 16;
+//static const uint SPI_0_CS = 17;
+//static const uint SPI_0_SCK = 18;
+//static const uint SPI_0_MISO = 19;
 
 // i2c port 0
-static const uint I2C_0_SDA = 20;
-static const uint I2C_0_SCL = 21;
+//static const uint I2C_0_SDA = 20;
+//static const uint I2C_0_SCL = 21;
 
 // i2c port 1
 static const uint I2C_1_SDA = 26;
 static const uint I2C_1_SCL = 27;
 
 
+/*******************************************************************************
+ * Reserved for LCD
+ ******************************************************************************/
+// Buttons
+static const uint UI_BTN_A = 15;
+static const uint UI_BTN_B = 17;
+
+static const uint UI_BTN_UP = 2;
+static const uint UI_BTN_DOWN = 18;
+static const uint UI_BTN_LEFT = 16;
+static const uint UI_BTN_RIGHT = 20;
+static const uint UI_BTN_CENTER = 3;
+
+/* Declared in the LCD library
+EPD_RST_PIN  = 12;
+EPD_DC_PIN   = 8;
+EPD_BL_PIN   = 13;
+
+EPD_CS_PIN   = 9;
+EPD_CLK_PIN  = 10;
+EPD_MOSI_PIN = 11;
+
+EPD_SCL_PIN  = 7;
+EPD_SDA_PIN  = 6;
+*/
 }  // namespace Pins

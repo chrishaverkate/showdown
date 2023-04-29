@@ -36,7 +36,7 @@ void UiLCD::initialize() {
 	Paint_NewImage((UBYTE*)_display_buffer, LCD_1IN14.WIDTH, LCD_1IN14.HEIGHT, 0, WHITE);
 	Paint_SetScale(65);
 	Paint_Clear(WHITE);
-	Paint_SetRotate(ROTATE_180);
+	Paint_SetRotate(ROTATE_0);
 	Paint_Clear(BLACK);
 
 	update_lux(0.0f);
