@@ -21,6 +21,7 @@ public:
 	void update_clear(float clear);
 	void update_cct(int cct);
 
+	void draw_test(int vertical_offset = 0);
 
 
 private:
@@ -42,4 +43,6 @@ private:
 	Bar _clear_light {220, 235, 30, 130, WHITE, BLACK, 0};
 
 	void draw_bar_vertical(const Bar& bar);
+
+
 };

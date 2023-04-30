@@ -5,10 +5,12 @@
 #include <cstdio>
 namespace Pins {
 /*******************************************************************************
- * Visual
+ * Visual / Audio
  ******************************************************************************/
 
 static const uint OB_LED = 25;    // On-board LED - show pico has life
+
+static const uint BUZZER = 28;    // Buzzer
 
 /*******************************************************************************
  * Communications
@@ -31,7 +33,6 @@ static const uint UART_RX = 1;
 // i2c port 1
 static const uint I2C_1_SDA = 26;
 static const uint I2C_1_SCL = 27;
-
 
 /*******************************************************************************
  * Reserved for LCD

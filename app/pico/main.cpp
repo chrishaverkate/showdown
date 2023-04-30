@@ -1,6 +1,7 @@
 #include <memory>
 #include <pico/binary_info.h>
 #include <pico/stdlib.h>
+#include <hardware/pwm.h>
 #include <stdio.h>
 
 #include "lcd/ui_lcd.h"
@@ -8,8 +9,9 @@
 
 using std::make_unique;
 
-void check_button_left(uint32_t& button_press_count);
-void check_button_right(uint32_t& button_press_count);
+void check_button_a();
+void check_button_left(int& button_press_count);
+void check_button_right(int& button_press_count);
 void onboard_led_heartbeat();
 void init_io();
 
@@ -28,18 +30,17 @@ int main(int argc, char** argv) {
 	auto ui_lcd = make_unique<UiLCD>();
 	ui_lcd->initialize();
 
-	ui_lcd->update_lux(0);
-	uint32_t button_press_count = 0;
-	uint32_t time_us = 0;
+	int vertical_offset = 0;
 
 	while (true) {
 		onboard_led_heartbeat();
-//		check_button_left(button_press_count);
-//		check_button_right(button_press_count);
 
-		time_us = to_ms_since_boot(get_absolute_time());
+		check_button_a();
 
-		ui_lcd->update_lux(time_us / 1000);
+		check_button_left(vertical_offset);
+		check_button_right(vertical_offset);
+
+		ui_lcd->draw_test(vertical_offset);
 
 		if (count++ % 10000000 == 0) {
 			printf("Still alive! %llu\n", get_absolute_time());
@@ -50,27 +51,52 @@ int main(int argc, char** argv) {
 }
 #pragma clang diagnostic pop
 
-void check_button_left(uint32_t& button_press_count) {
-	static uint32_t last_button_state = 0;
-	const uint32_t button_state = gpio_get(Pins::UI_BTN_LEFT);
+void check_button_a() {
+	static int last_button_state = 0;
+	const int button_state = gpio_get(Pins::UI_BTN_A);
 
 	if (button_state != last_button_state) {
 		if (button_state == 0) {
-			printf("Button pressed %lu times\n", --button_press_count);
+			printf("Button A pressed\n");
+		}
+		last_button_state = button_state;
+	}
+
+	uint slice_num = pwm_gpio_to_slice_num(Pins::BUZZER);
+	if(button_state == 0) {
+		pwm_set_enabled(slice_num, true);
+	} else {
+		pwm_set_enabled(slice_num, false);
+		gpio_put(Pins::BUZZER, false);
+	}
+}
+
+void check_button_left(int& button_press_count) {
+	static int last_button_state = 0;
+	const int button_state = gpio_get(Pins::UI_BTN_LEFT);
+
+	if (button_state != last_button_state) {
+		if (button_state == 0) {
+			printf("Button pressed %d times\n", ++button_press_count);
+
 		}
 		last_button_state = button_state;
 	}
 }
 
-void check_button_right(uint32_t& button_press_count) {
-	static uint32_t last_button_state = 0;
-	const uint32_t button_state = gpio_get(Pins::UI_BTN_RIGHT);
+void check_button_right(int& button_press_count) {
+	static int last_button_state = 0;
+	const int button_state = gpio_get(Pins::UI_BTN_RIGHT);
 
 	if (button_state != last_button_state) {
 		if (button_state == 0) {
-			printf("Button pressed %lu times\n", ++button_press_count);
+			printf("Button pressed %d times\n", --button_press_count);
 		}
 		last_button_state = button_state;
+	}
+
+	if (button_press_count < 0) {
+		button_press_count = 0;
 	}
 }
 
@@ -86,6 +112,17 @@ void init_io() {
 	gpio_init(Pins::UI_BTN_RIGHT);
 	gpio_set_dir(Pins::UI_BTN_RIGHT, GPIO_IN);
 	gpio_pull_up(Pins::UI_BTN_RIGHT);
+
+	gpio_init(Pins::UI_BTN_A);
+	gpio_set_dir(Pins::UI_BTN_A, GPIO_IN);
+	gpio_pull_up(Pins::UI_BTN_A);
+
+	gpio_set_function(Pins::BUZZER, GPIO_FUNC_PWM);
+	uint slice_num = pwm_gpio_to_slice_num(Pins::BUZZER);
+	pwm_config config = pwm_get_default_config();
+	pwm_config_set_clkdiv(&config, 4.f);
+	pwm_init(slice_num, &config, false);
+	pwm_set_gpio_level(Pins::BUZZER, 32000);
 
 	printf("\n\n -> IO Initialized!\n");
 }
