@@ -9,6 +9,7 @@
 
 using std::make_unique;
 
+uint32_t pwm_setup(uint pin, uint32_t f, int d);
 void check_button_a();
 void check_button_left(int& button_press_count);
 void check_button_right(int& button_press_count);
@@ -51,6 +52,30 @@ int main(int argc, char** argv) {
 }
 #pragma clang diagnostic pop
 
+/** @brief Setup the an IO pin as a PWM output
+ * @param pin [in] The GPIO pin to configure for PWM
+ * @param freq [in] The frequency in Hz
+ * @param d [in] The duty cycle in percent
+ * @return
+ */
+uint32_t pwm_setup(uint pin, uint32_t freq) {
+	gpio_set_function(pin, GPIO_FUNC_PWM);
+	uint slice_num = pwm_gpio_to_slice_num(pin);
+	uint chan = pwm_gpio_to_channel(pin);
+
+	uint duty_cycle = 50;
+	uint32_t clock = 125000000;
+	uint32_t divider16 = clock / freq / 4096 + (clock % (freq * 4096) != 0);
+	if (divider16 / 16 == 0)
+		divider16 = 16;
+
+	uint32_t wrap = clock * 16 / divider16 / freq - 1;
+	pwm_set_clkdiv_int_frac(slice_num, divider16 / 16, divider16 & 0xF);
+	pwm_set_wrap(slice_num, wrap);
+	pwm_set_chan_level(slice_num, chan, wrap * duty_cycle / 100);
+	return wrap;
+}
+
 void check_button_a() {
 	static int last_button_state = 0;
 	const int button_state = gpio_get(Pins::UI_BTN_A);
@@ -67,7 +92,6 @@ void check_button_a() {
 		pwm_set_enabled(slice_num, true);
 	} else {
 		pwm_set_enabled(slice_num, false);
-		gpio_put(Pins::BUZZER, false);
 	}
 }
 
@@ -117,12 +141,12 @@ void init_io() {
 	gpio_set_dir(Pins::UI_BTN_A, GPIO_IN);
 	gpio_pull_up(Pins::UI_BTN_A);
 
-	gpio_set_function(Pins::BUZZER, GPIO_FUNC_PWM);
+	pwm_setup(Pins::BUZZER, 1500);
 	uint slice_num = pwm_gpio_to_slice_num(Pins::BUZZER);
-	pwm_config config = pwm_get_default_config();
-	pwm_config_set_clkdiv(&config, 4.f);
-	pwm_init(slice_num, &config, false);
-	pwm_set_gpio_level(Pins::BUZZER, 32000);
+	pwm_set_enabled(slice_num, true);
+	sleep_ms(500);
+	pwm_set_enabled(slice_num, false);
+
 
 	printf("\n\n -> IO Initialized!\n");
 }

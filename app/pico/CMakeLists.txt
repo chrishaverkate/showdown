@@ -18,6 +18,7 @@ target_link_libraries(${target_name}
 	hardware_gpio
 	hardware_i2c
 	hardware_spi
+	hardware_pwm
 	${PROJECT_NAME}_lib
 
 	# Screen libraries

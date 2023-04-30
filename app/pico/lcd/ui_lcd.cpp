@@ -106,7 +106,7 @@ void UiLCD::draw_test(int vertical_offset) {
 
 	static int last_vertical_offset = -1;
 
-	int offset_scalar = 4;
+	int offset_scalar = 8;
 
 	const int v_offset = offset_scalar * vertical_offset;
 

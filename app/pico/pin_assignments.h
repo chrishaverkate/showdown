@@ -10,7 +10,11 @@ namespace Pins {
 
 static const uint OB_LED = 25;    // On-board LED - show pico has life
 
-static const uint BUZZER = 28;    // Buzzer
+/* Pin 21 was carefully selected because it uses PWM Generator slice 2 channel B (1),
+ * which is shared with pin 5. Pin 5 should be avoided.
+ */
+static const uint BUZZER = 21;    // Buzzer
+static const uint DEAD_PIN = 5;   // Do not use this pin
 
 /*******************************************************************************
  * Communications
