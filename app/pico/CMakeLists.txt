@@ -11,6 +11,9 @@ add_subdirectory(lcd)
 add_executable(${target_name}
 	main.cpp
 	lcd/ui_lcd.cpp
+
+	implementations/button.cpp
+	implementations/lcd_screen.cpp
 )
 
 target_link_libraries(${target_name}
