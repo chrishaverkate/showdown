@@ -2,7 +2,7 @@ set(target_name ${CMAKE_PROJECT_NAME}_lib)
 
 add_library(${target_name}
 	OBJECT
-		message.cpp
+		ControllerImpl.cpp
 )
 
 target_link_libraries(${target_name}

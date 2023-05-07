@@ -4,5 +4,6 @@
  */
 class Screen {
 public:
+	virtual ~Screen() = default;
     virtual void draw_line() = 0;
 };

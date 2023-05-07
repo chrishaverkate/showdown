@@ -15,12 +15,13 @@ void UiLCD::initialize() {
 	printf("UI: Initializing...\n");
 	sleep_ms(100);
 	UDOUBLE image_size = LCD_1IN14_HEIGHT * LCD_1IN14_WIDTH * 2;
-	if((_display_buffer = (UWORD*)malloc(image_size)) == NULL) {
+	if ((_display_buffer = (UWORD*)malloc(image_size)) == NULL) {
 		printf("Failed to apply for black memory...\r\n");
-		while(1) ;
+		while (1)
+			;
 	}
 
-	if(DEV_Module_Init() != 0){
+	if (DEV_Module_Init() != 0) {
 		printf("! LCD: Error DEV_Module_Init()\n");
 		return;
 	}
@@ -39,15 +40,15 @@ void UiLCD::initialize() {
 	Paint_SetRotate(ROTATE_180);
 	Paint_Clear(BLACK);
 
-//	update_lux(0.0f);
-//	update_red(0.0f);
-//	update_green(0.0f);
-//	update_blue(0.0f);
-//	update_clear(0.0f);
-//	update_cct(0);
+	//	update_lux(0.0f);
+	//	update_red(0.0f);
+	//	update_green(0.0f);
+	//	update_blue(0.0f);
+	//	update_clear(0.0f);
+	//	update_cct(0);
 
 	LCD_1IN14_Display(_display_buffer);
-//	sleep_ms(2000);
+	//	sleep_ms(2000);
 }
 
 void UiLCD::draw() {
@@ -100,7 +101,7 @@ void UiLCD::update_cct(int cct) {
 }
 
 void UiLCD::draw_test(int vertical_offset) {
-	if(vertical_offset < 0) {
+	if (vertical_offset < 0) {
 		vertical_offset = 0;
 	}
 
@@ -110,7 +111,7 @@ void UiLCD::draw_test(int vertical_offset) {
 
 	const int v_offset = offset_scalar * vertical_offset;
 
-	if(last_vertical_offset == vertical_offset) {
+	if (last_vertical_offset == vertical_offset) {
 		return;
 	}
 
@@ -133,9 +134,7 @@ void UiLCD::draw_test(int vertical_offset) {
 	const uint16_t zero_x = 1;
 	const uint16_t zero_y = LCD_1IN14.HEIGHT - 60 + v_offset;
 
-	// header
-	sprintf(buffer, "#     t");
-	Paint_DrawString_EN(1, 1, buffer, &Font24, BLACK, WHITE);
+
 
 	// initial timeline
 	sprintf(buffer, "0");
@@ -146,14 +145,18 @@ void UiLCD::draw_test(int vertical_offset) {
 	               shot_time_divider_top_y,
 	               shot_time_divider_bottom_x,
 	               shot_time_divider_bottom_y,
-	               GRAY, DOT_PIXEL_1X1, LINE_STYLE_SOLID);
+	               GRAY,
+	               DOT_PIXEL_1X1,
+	               LINE_STYLE_SOLID);
 
 	// zero time
 	Paint_DrawLine(zero_line_left_x,
 	               zero_line_left_y,
 	               zero_line_right_x,
 	               zero_line_right_y,
-	               GRAY, DOT_PIXEL_1X1, LINE_STYLE_SOLID);
+	               GRAY,
+	               DOT_PIXEL_1X1,
+	               LINE_STYLE_SOLID);
 
 	// draw shot 1
 	Paint_DrawCircle(40, LCD_1IN14.HEIGHT - 20 + v_offset, 5, RED, DOT_PIXEL_1X1, DRAW_FILL_FULL);
@@ -174,6 +177,17 @@ void UiLCD::draw_test(int vertical_offset) {
 	Paint_DrawCircle(40, LCD_1IN14.HEIGHT - 170 + v_offset, 5, GREEN, DOT_PIXEL_1X1, DRAW_FILL_FULL);
 	sprintf(buffer, " 4     1.90");
 	Paint_DrawString_EN(1, LCD_1IN14.HEIGHT - 175 + v_offset, buffer, &Font16, BLACK, WHITE);
+
+	// draw shot 4
+	Paint_DrawCircle(40, LCD_1IN14.HEIGHT - 240 + v_offset, 5, GREEN, DOT_PIXEL_1X1, DRAW_FILL_FULL);
+	sprintf(buffer, " 5     3.00");
+	Paint_DrawString_EN(1, LCD_1IN14.HEIGHT - 245 + v_offset, buffer, &Font16, BLACK, WHITE);
+
+	// header
+	Paint_DrawRectangle(1, 1, LCD_1IN14.WIDTH, 20, BLACK, DOT_PIXEL_1X1, DRAW_FILL_FULL);
+	sprintf(buffer, "#     t");
+	Paint_DrawString_EN(1, 1, buffer, &Font24, BLACK, WHITE);
+	Paint_DrawLine(1, 21, LCD_1IN14.WIDTH, 21, WHITE, DOT_PIXEL_2X2, LINE_STYLE_SOLID);
 
 	draw();
 }
