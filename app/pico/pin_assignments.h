@@ -45,10 +45,10 @@ static const uint I2C_1_SCL = 27;
 static const uint UI_BTN_A = 15;
 static const uint UI_BTN_B = 17;
 
-static const uint UI_BTN_UP = 2;
-static const uint UI_BTN_DOWN = 18;
-static const uint UI_BTN_LEFT = 16;
-static const uint UI_BTN_RIGHT = 20;
+static const uint UI_BTN_LEFT = 2;   // documented as up
+static const uint UI_BTN_RIGHT = 18; // documented as down
+static const uint UI_BTN_DOWN = 16;  //documented as left
+static const uint UI_BTN_UP = 20;    // documented as right
 static const uint UI_BTN_CENTER = 3;
 
 /* Declared in the LCD library

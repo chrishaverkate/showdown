@@ -44,20 +44,20 @@ typedef enum {
 /**
  * image color
 **/
-#define WHITE          0xFFFF
-#define BLACK          0x0000
-#define BLUE           0x001F
-#define BRED           0XF81F
-#define GRED           0XFFE0
-#define GBLUE          0X07FF
-#define RED            0xF800
-#define MAGENTA        0xF81F
-#define GREEN          0x07E0
-#define CYAN           0x7FFF
-#define YELLOW         0xFFE0
-#define BROWN          0XBC40
-#define BRRED          0XFC07
-#define GRAY           0X8430
+static const uint16_t WHITE     = 0xFFFF;
+static const uint16_t BLACK     = 0x0000;
+static const uint16_t BLUE      = 0x001F;
+static const uint16_t BRED      = 0XF81F;
+static const uint16_t GRED      = 0XFFE0;
+static const uint16_t GBLUE     = 0X07FF;
+static const uint16_t RED       = 0xF800;
+static const uint16_t MAGENTA   = 0xF81F;
+static const uint16_t GREEN     = 0x07E0;
+static const uint16_t CYAN      = 0x7FFF;
+static const uint16_t YELLOW    = 0xFFE0;
+static const uint16_t BROWN     = 0XBC40;
+static const uint16_t BRRED     = 0XFC07;
+static const uint16_t GRAY      = 0X8430;
 
 #define IMAGE_BACKGROUND    WHITE
 #define FONT_FOREGROUND     BLACK

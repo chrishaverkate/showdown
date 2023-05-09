@@ -1,24 +1,35 @@
-#include "ControllerImpl.h"
+#include "controller_impl.h"
+#include "views/delta_table.h"
+#include "views/home.h"
+#include "views/time_table.h"
+#include "views/timeline.h"
 
+using std::make_unique;
 using std::move;
+using std::shared_ptr;
 using std::unique_ptr;
 
 void ControllerImpl::draw_current_view() {
+	if(_views.empty()) {
+		printf("Controller: no views to draw\n");
+		return;
+	}
 	_views.at(_current_view_index)->draw();
 }
 
-void ControllerImpl::add_view(ViewType view_type) {
-
-	// TODO: for each view, get the correct model and create the view.
+void ControllerImpl::add_view(ViewType view_type, shared_ptr<Screen> screen) {
 	switch (view_type) {
 	case ViewType::HOME:
-//		add_view(make_unique<Home>(get_model(view_type));
+		add_view(make_unique<Home>(_session, screen));
 		break;
 	case ViewType::TIMELINE:
+		add_view(make_unique<Timeline>(_session, screen));
 		break;
 	case ViewType::TIME_TABLE:
+		add_view(make_unique<TimeTable>(_session, screen));
 		break;
 	case ViewType::DELTA_TABLE:
+		add_view(make_unique<DeltaTable>(_session, screen));
 		break;
 	}
 }
@@ -44,10 +55,12 @@ void ControllerImpl::button_pressed_down(uint64_t current_time_us) {
 }
 
 void ControllerImpl::button_pressed_left(uint64_t current_time_us) {
+	_views.at(_current_view_index)->clear();
 	_current_view_index = (_current_view_index - 1) % _views.size();
 }
 
 void ControllerImpl::button_pressed_right(uint64_t current_time_us) {
+	_views.at(_current_view_index)->clear();
 	_current_view_index = (_current_view_index + 1) % _views.size();
 }
 

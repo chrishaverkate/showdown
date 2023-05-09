@@ -150,7 +150,7 @@ void DEV_GPIO_Init(void)
     DEV_Digital_Write(EPD_BL_PIN, 1);
 }
 /******************************************************************************
-function:	Module Initialize, the library and initialize the pins, SPI protocol
+function:	Module initialize, the library and initialize the pins, SPI protocol
 parameter:
 Info:
 ******************************************************************************/

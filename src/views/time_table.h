@@ -7,10 +7,10 @@
 
 #include <memory>
 
-class Home : public View {
+class TimeTable : public View {
 public:
-	explicit Home(std::shared_ptr<Session> session, std::shared_ptr<Screen> screen);
-	~Home() override = default;
+	explicit TimeTable(std::shared_ptr<Session> session, std::shared_ptr<Screen> screen);
+	~TimeTable() override = default;
 	void draw() override;
 	void clear() override;
 

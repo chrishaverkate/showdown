@@ -1,7 +1,7 @@
 #pragma once
 
 #include <showdown/controller.h>
-#include <showdown/event_receiver.h>
+#include <showdown/screen.h>
 
 #include "models/session.h"
 #include "views/view.h"
@@ -9,13 +9,13 @@
 #include <memory>
 #include <vector>
 
-class ControllerImpl : public Controller, public EventReceiver {
+class ControllerImpl : public Controller {
 public:
-
+	ControllerImpl() {printf("ControllerImpl: ctor\n");}
 	~ControllerImpl() override = default;
 
 	void draw_current_view() override;
-	void add_view(ViewType view_type) override;
+	void add_view(ViewType view_type, std::shared_ptr<Screen> screen) override;
 
 	void add_view(std::unique_ptr<View> view);
 
@@ -33,4 +33,6 @@ public:
 private:
 	std::vector<std::unique_ptr<View>> _views {};
 	size_t _current_view_index = -1;
+
+	std::shared_ptr<Session> _session;
 };

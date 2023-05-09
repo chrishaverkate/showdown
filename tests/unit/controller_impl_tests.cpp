@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
+#include <controller_impl.h>
 #include <views/view.h>
-#include <ControllerImpl.h>
 
 #include <memory>
 
@@ -15,6 +15,10 @@ public:
 		_drawn = true;
 	}
 
+	void clear() override {
+
+	}
+
 	bool is_drawn() const {
 		return _drawn;
 	}
@@ -26,6 +30,10 @@ class FakeSpecialView : public View {
 public:
 	void draw() override {
 		_drawn = true;
+	}
+
+	void clear() override {
+
 	}
 
 	bool is_drawn() const {

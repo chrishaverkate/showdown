@@ -7,10 +7,11 @@
 
 #include <memory>
 
-class Home : public View {
+class Timeline : public View {
 public:
-	explicit Home(std::shared_ptr<Session> session, std::shared_ptr<Screen> screen);
-	~Home() override = default;
+	explicit Timeline(std::shared_ptr<Session> session, std::shared_ptr<Screen> screen);
+	~Timeline() override = default;
+
 	void draw() override;
 	void clear() override;
 
