@@ -36,7 +36,7 @@ double Session::convert_time_to_seconds(uint64_t time) {
 }
 
 void Session::start_new_session(uint64_t time) {
-	printf("Starting new session at %llu\n", time);
+	printf("\tStarting new session at %llu\n", time);
 	_shots.clear();
 	_shot_deltas.clear();
 	_start_time = time;

@@ -10,6 +10,7 @@ using std::shared_ptr;
 using std::unique_ptr;
 
 void ControllerImpl::draw_current_view() {
+	printf("\tController: draw_current_view\n");
 	if(_views.empty()) {
 		printf("Controller: no views to draw\n");
 		return;
@@ -48,6 +49,7 @@ void ControllerImpl::button_pressed_a(uint64_t current_time_us) {
 void ControllerImpl::button_pressed_b(uint64_t current_time_us) {
 	printf("\tController: button pressed b - %llu\n", current_time_us);
 	_session->start_new_session(current_time_us);
+	draw_current_view();
 }
 
 void ControllerImpl::button_pressed_up(uint64_t current_time_us) {
@@ -59,11 +61,13 @@ void ControllerImpl::button_pressed_down(uint64_t current_time_us) {
 void ControllerImpl::button_pressed_left(uint64_t current_time_us) {
 	_views.at(_current_view_index)->clear();
 	_current_view_index = (_current_view_index - 1) % _views.size();
+	draw_current_view();
 }
 
 void ControllerImpl::button_pressed_right(uint64_t current_time_us) {
 	_views.at(_current_view_index)->clear();
 	_current_view_index = (_current_view_index + 1) % _views.size();
+	draw_current_view();
 }
 
 void ControllerImpl::button_pressed_select(uint64_t current_time_us) {

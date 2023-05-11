@@ -10,6 +10,11 @@ Timeline::Timeline(std::shared_ptr<Session> session, std::shared_ptr<Screen> scr
 }
 
 void Timeline::draw() {
+	printf("\tTimeline: draw\n");
+
+	// TODO: Can I come up with a better way to only draw a "dirty region"?
+	clear();
+
 	_screen->draw_header(" #    t");
 	_screen->draw_divider_vertical(40, 1);
 	_screen->draw_divider_horizontal(190, 1);
@@ -21,7 +26,9 @@ void Timeline::draw() {
 	uint position = first_position;
 	uint shot_number = 1;
 
+	// TODO: Only draw new shots?
 	for(auto shot : _session->get_shots()) {
+		printf("\t\tdraw shot %llu\n", shot);
 		snprintf(buffer, sizeof(buffer), " %u    %.2f",
 		         shot_number++,
 		         Session::convert_time_to_seconds(shot));

@@ -49,6 +49,7 @@ int main(int argc, char** argv) {
 	controller->add_view(ViewType::TIMELINE, static_cast<std::shared_ptr<Screen>>(&lcd));
 	controller->add_view(ViewType::TIME_TABLE, static_cast<std::shared_ptr<Screen>>(&lcd));
 	controller->add_view(ViewType::DELTA_TABLE, static_cast<std::shared_ptr<Screen>>(&lcd));
+	controller->draw_current_view();
 
 	printf("Setting up fake shot session...\n");
 	build_fake_shot_session(controller);
@@ -68,11 +69,9 @@ int main(int argc, char** argv) {
 		check_button_left(controller);
 		check_button_right(controller);
 
-		controller->draw_current_view();
-
-		if (count++ % 10000000 == 0) {
-			printf("Still alive! %llu\n", time_us_64());
-		}
+//		if (count++ % 10000000 == 0) {
+//			printf("Still alive! %llu\n", time_us_64());
+//		}
 	}
 
 	return 0;
