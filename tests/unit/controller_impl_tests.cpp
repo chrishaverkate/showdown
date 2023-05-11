@@ -28,6 +28,12 @@ public:
 	}
 	void draw_circle(uint center_x, uint center_y, uint radius, Color color) override {
 	}
+	unsigned int get_width() override {
+		return 0;
+	}
+	unsigned int get_height() override {
+		return 0;
+	}
 };
 
 class FakeHomeView : public Home {

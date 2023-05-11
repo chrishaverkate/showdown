@@ -16,6 +16,7 @@ public:
 	enum class Color {
 		BLACK,
 		WHITE,
+		GRAY,
 		RED,
 		GREEN,
 		BLUE,
@@ -25,6 +26,10 @@ public:
 	};
 
 	virtual ~Screen() = default;
+
+	virtual unsigned int get_width() = 0;
+
+	virtual unsigned int get_height() = 0;
 
 	/** @brief Paint the entire screen to the background color. */
 	virtual void clear() = 0;

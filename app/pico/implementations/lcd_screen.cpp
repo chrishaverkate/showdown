@@ -1,21 +1,10 @@
 #include "lcd_screen.h"
 
-extern "C" {
-#include "../lcd/lib/Config/DEV_Config.h"
-#include "../lcd/lib/GUI/GUI_Paint.h"
-#include "../lcd/lib/LCD/LCD_1in14.h"
-}
-
 void LcdScreen::initialize() {
 	printf("UI: Initializing...\n");
 	sleep_ms(100);
-	UDOUBLE image_size = LCD_1IN14_HEIGHT * LCD_1IN14_WIDTH * 2;
+	UDOUBLE image_size = MAX_HEIGHT * MAX_WIDTH * 2;
 	_display_buffer = new UWORD[image_size];
-	if (_display_buffer == NULL) {
-		printf("Failed malloc display memory!\r\n");
-		while (1)
-			;
-	}
 
 	if (DEV_Module_Init() != 0) {
 		printf("! LCD: Error DEV_Module_Init()\n");
@@ -78,9 +67,9 @@ void LcdScreen::draw_header(std::string string) {
 void LcdScreen::draw_divider_horizontal(uint position_px, uint thickness) {
 	Paint_DrawLine(0,
 	               position_px + _vertical_offset,
-	               LCD_1IN14_WIDTH,
+	               MAX_WIDTH,
 	               position_px + _vertical_offset,
-	               _color_foreground,
+	               GRAY,
 	               convert_thickness(thickness),
 	               LINE_STYLE_SOLID);
 	draw();
@@ -90,8 +79,8 @@ void LcdScreen::draw_divider_vertical(uint position_px, uint thickness) {
 	Paint_DrawLine(position_px,
 	               1,
 	               position_px,
-	               LCD_1IN14_HEIGHT,
-	               _color_foreground,
+	               MAX_HEIGHT,
+	               GRAY,
 	               convert_thickness(thickness),
 	               LINE_STYLE_SOLID);
 	draw();
@@ -153,6 +142,9 @@ uint16_t LcdScreen::convert_color(Color color) {
 	case Screen::Color::WHITE:
 		result = WHITE;
 		break;
+	case Screen::Color::GRAY:
+		result = GRAY;
+		break;
 	case Screen::Color::RED:
 		result = RED;
 		break;
@@ -193,4 +185,10 @@ _tFont* LcdScreen::convert_font(FontSize size) {
 
 	return result;
 }
+unsigned int LcdScreen::get_width() {
+	return 0;
+}
 
+unsigned int LcdScreen::get_height() {
+	return 0;
+}

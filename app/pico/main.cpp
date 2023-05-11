@@ -83,8 +83,8 @@ void build_fake_shot_session(unique_ptr<Controller>& controller) {
     controller->button_pressed_b(start_time);
 	controller->shot_detected(start_time + 1100000);
 	controller->shot_detected(start_time + 1500000);
-	controller->shot_detected(start_time + 1900000);
-	controller->shot_detected(start_time + 3000000);
+	controller->shot_detected(start_time + 1850000);
+	controller->shot_detected(start_time + 2930000);
 }
 
 /** @brief Setup the an IO pin as a PWM output

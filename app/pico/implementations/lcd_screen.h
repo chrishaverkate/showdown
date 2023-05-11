@@ -1,5 +1,11 @@
 #pragma once
 
+extern "C" {
+#include "../lcd/lib/Config/DEV_Config.h"
+#include "../lcd/lib/GUI/GUI_Paint.h"
+#include "../lcd/lib/LCD/LCD_1in14.h"
+}
+
 #include <showdown/screen.h>
 
 extern "C" {
@@ -9,6 +15,10 @@ extern "C" {
 class LcdScreen : public Screen {
 public:
 	void initialize();
+
+	unsigned int get_width() override;
+	unsigned int get_height() override;
+
 	void draw();
 
 	void clear() override;
@@ -21,6 +31,9 @@ public:
 
 private:
 	uint16_t* _display_buffer{};
+
+	static constexpr uint16_t MAX_WIDTH = LCD_1IN14_WIDTH;
+	static constexpr uint16_t MAX_HEIGHT = LCD_1IN14_HEIGHT;
 
 	// a positive offset is the number of pixels to move the screen down
 	uint16_t _vertical_offset = 0;
