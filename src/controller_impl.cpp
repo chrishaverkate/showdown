@@ -46,6 +46,8 @@ void ControllerImpl::button_pressed_a(uint64_t current_time_us) {
 }
 
 void ControllerImpl::button_pressed_b(uint64_t current_time_us) {
+	printf("\tController: button pressed b - %llu\n", current_time_us);
+	_session->start_new_session(current_time_us);
 }
 
 void ControllerImpl::button_pressed_up(uint64_t current_time_us) {
@@ -68,4 +70,11 @@ void ControllerImpl::button_pressed_select(uint64_t current_time_us) {
 }
 
 void ControllerImpl::shot_detected(uint64_t current_time_us) {
+	printf("\tController: shot detected - %llu\n", current_time_us);
+	_session->add_shot(current_time_us);
+	draw_current_view();
+}
+
+void ControllerImpl::override_session(std::shared_ptr<Session> session) {
+	_session = session;
 }

@@ -45,6 +45,8 @@ void LcdScreen::draw() {
 
 void LcdScreen::clear() {
 	Paint_Clear(_color_background);
+	_includes_header = false;
+	_vertical_offset = 0;
 	draw();
 }
 
@@ -66,8 +68,10 @@ void LcdScreen::draw_header(std::string string) {
 	                    &Font20,
 	                    _color_foreground,
 	                    _color_background);
-	_includes_header = true;
-	_vertical_offset += _header_offset;
+	if(!_includes_header) {
+		_includes_header = true;
+		_vertical_offset += _header_offset;
+	}
 	draw();
 }
 
@@ -84,9 +88,9 @@ void LcdScreen::draw_divider_horizontal(uint position_px, uint thickness) {
 
 void LcdScreen::draw_divider_vertical(uint position_px, uint thickness) {
 	Paint_DrawLine(position_px,
-	               0 + _vertical_offset,
+	               1,
 	               position_px,
-	               LCD_1IN14_HEIGHT + _vertical_offset,
+	               LCD_1IN14_HEIGHT,
 	               _color_foreground,
 	               convert_thickness(thickness),
 	               LINE_STYLE_SOLID);
@@ -117,7 +121,6 @@ DOT_PIXEL LcdScreen::convert_thickness(uint thickness) {
 	DOT_PIXEL result = DOT_PIXEL_1X1;
 
 	switch (thickness) {
-	case 0:
 	case 1:
 		result = DOT_PIXEL_1X1;
 		break;

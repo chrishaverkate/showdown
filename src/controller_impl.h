@@ -28,11 +28,11 @@ public:
 	void button_pressed_select(uint64_t current_time_us) override;
 	void shot_detected(uint64_t current_time_us) override;
 
-
+	void override_session(std::shared_ptr<Session> session);
 
 private:
 	std::vector<std::unique_ptr<View>> _views {};
 	size_t _current_view_index = -1;
 
-	std::shared_ptr<Session> _session;
+	std::shared_ptr<Session> _session = std::make_shared<Session>();
 };

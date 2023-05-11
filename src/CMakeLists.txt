@@ -5,6 +5,8 @@ add_library(${target_name}
 		controller_impl.cpp
 		factory.cpp
 
+		models/session.cpp
+
 		views/delta_table.cpp
 		views/home.cpp
 		views/timeline.cpp

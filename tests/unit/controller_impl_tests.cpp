@@ -2,15 +2,40 @@
 
 #include <controller_impl.h>
 #include <views/view.h>
+#include <views/home.h>
 
 #include <memory>
 
+using std::make_shared;
 using std::make_unique;
 using std::move;
+using std::shared_ptr;
 using std::unique_ptr;
 
-class FakeHomeView : public View {
+class FakeScreen : public Screen {
 public:
+	void clear() override {
+	}
+	void draw_line(uint start_x, uint start_y, uint end_x, uint end_y, uint thickness) override {
+	}
+	void draw_header(std::string string) override {
+	}
+	void draw_divider_horizontal(uint position_px, uint thickness) override {
+	}
+	void draw_divider_vertical(uint position_px, uint thickness) override {
+	}
+	void draw_text(std::string text, uint x, uint y, FontSize size) override {
+	}
+	void draw_circle(uint center_x, uint center_y, uint radius, Color color) override {
+	}
+};
+
+class FakeHomeView : public Home {
+public:
+	FakeHomeView(shared_ptr<Session> session, shared_ptr<Screen> screen)
+		: Home(session, screen) {
+
+	}
 	void draw() override {
 		_drawn = true;
 	}
@@ -43,6 +68,10 @@ public:
 	bool _drawn = false;
 };
 
+class FakeSession : public Session {
+
+};
+
 class ControllerImplTests : public ::testing::Test {
 protected:
 	void SetUp() override {
@@ -52,8 +81,10 @@ protected:
 	}
 
 	ControllerImpl _c;
-	std::unique_ptr<FakeHomeView> view_fake_home = std::make_unique<FakeHomeView>();
-	std::unique_ptr<FakeSpecialView> view_fake_special = std::make_unique<FakeSpecialView>();
+	shared_ptr<FakeScreen> screen = std::make_shared<FakeScreen>();
+	shared_ptr<FakeSession> session = std::make_shared<FakeSession>();
+	unique_ptr<FakeHomeView> view_fake_home = std::make_unique<FakeHomeView>(session, screen);
+	unique_ptr<FakeSpecialView> view_fake_special = std::make_unique<FakeSpecialView>();
 };
 
 TEST_F(ControllerImplTests, add_view) {
@@ -105,3 +136,13 @@ TEST_F(ControllerImplTests, press_left_switches_view_and_wrapps_to_first_view) {
 	_c.draw_current_view();
 	EXPECT_TRUE(my_home->is_drawn());
 }
+
+//TEST_F(ControllerImplTests, session_testing) {
+//	auto my_home = view_fake_home.get();
+//
+//	_c.add_view(move(view_fake_home));
+//	_c.draw_current_view();
+//	_c.shot_detected(10);
+//
+//	EXPECT_TRUE(my_home->is_drawn());
+//}

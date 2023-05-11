@@ -19,6 +19,8 @@ using std::make_unique;
 using std::shared_ptr;
 using std::unique_ptr;
 
+void build_fake_shot_session(unique_ptr<Controller>& controller);
+
 uint32_t pwm_setup(uint pin, uint32_t f, int d);
 void check_button_a(unique_ptr<Controller>& controller);
 void check_button_b(unique_ptr<Controller>& controller);
@@ -39,7 +41,7 @@ int main(int argc, char** argv) {
 	printf("Setting up LCD Screen...\n");
 	LcdScreen lcd;
 	lcd.initialize();
-	lcd.draw_header("Showdown");
+//	lcd.draw_header("Showdown");
 
 	printf("Setting up Controller and Views...\n");
 	auto controller = Factory::create_controller();
@@ -47,6 +49,9 @@ int main(int argc, char** argv) {
 	controller->add_view(ViewType::TIMELINE, static_cast<std::shared_ptr<Screen>>(&lcd));
 	controller->add_view(ViewType::TIME_TABLE, static_cast<std::shared_ptr<Screen>>(&lcd));
 	controller->add_view(ViewType::DELTA_TABLE, static_cast<std::shared_ptr<Screen>>(&lcd));
+
+	printf("Setting up fake shot session...\n");
+	build_fake_shot_session(controller);
 
 	uint64_t count = 0;
 
@@ -66,13 +71,22 @@ int main(int argc, char** argv) {
 		controller->draw_current_view();
 
 		if (count++ % 10000000 == 0) {
-			printf("Still alive! %llu\n", get_absolute_time());
+			printf("Still alive! %llu\n", time_us_64());
 		}
 	}
 
 	return 0;
 }
 #pragma clang diagnostic pop
+
+void build_fake_shot_session(unique_ptr<Controller>& controller) {
+	uint64_t start_time = 0;
+    controller->button_pressed_b(start_time);
+	controller->shot_detected(start_time + 1100000);
+	controller->shot_detected(start_time + 1500000);
+	controller->shot_detected(start_time + 1900000);
+	controller->shot_detected(start_time + 3000000);
+}
 
 /** @brief Setup the an IO pin as a PWM output
  * @param pin [in] The GPIO pin to configure for PWM
@@ -175,7 +189,7 @@ void check_button_right(unique_ptr<Controller>& controller) {
 
 	if (button_state != last_button_state) {
 		if (button_state == 0) {
-			printf("button: left\n");
+			printf("button: right\n");
 			controller->button_pressed_right(get_absolute_time());
 		}
 		last_button_state = button_state;

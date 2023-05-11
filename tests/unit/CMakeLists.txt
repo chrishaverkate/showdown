@@ -1,7 +1,8 @@
 set(target_name tests-unit)
 
 add_executable(${target_name}
-        controller_impl_tests.cpp
+	controller_impl_tests.cpp
+	session_tests.cpp
 )
 
 set_target_properties(${target_name}
