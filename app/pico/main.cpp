@@ -21,7 +21,7 @@ using std::unique_ptr;
 
 void build_fake_shot_session(unique_ptr<Controller>& controller);
 
-uint32_t pwm_setup(uint pin, uint32_t f, int d);
+uint32_t pwm_setup(uint8_t pin, uint32_t f, int d);
 void check_button_a(unique_ptr<Controller>& controller);
 void check_button_b(unique_ptr<Controller>& controller);
 void check_button_up(unique_ptr<Controller>& controller);
@@ -93,12 +93,12 @@ void build_fake_shot_session(unique_ptr<Controller>& controller) {
  * @param d [in] The duty cycle in percent
  * @return
  */
-uint32_t pwm_setup(uint pin, uint32_t freq) {
+uint32_t pwm_setup(uint8_t pin, uint32_t freq) {
 	gpio_set_function(pin, GPIO_FUNC_PWM);
-	uint slice_num = pwm_gpio_to_slice_num(pin);
-	uint chan = pwm_gpio_to_channel(pin);
+	uint8_t slice_num = pwm_gpio_to_slice_num(pin);
+	uint8_t chan = pwm_gpio_to_channel(pin);
 
-	uint duty_cycle = 50;
+	uint8_t duty_cycle = 50;
 	uint32_t clock = 125000000;
 	uint32_t divider16 = clock / freq / 4096 + (clock % (freq * 4096) != 0);
 	if (divider16 / 16 == 0)
@@ -122,7 +122,7 @@ void check_button_a(unique_ptr<Controller>& controller) {
 		last_button_state = button_state;
 	}
 
-	uint slice_num = pwm_gpio_to_slice_num(Pins::BUZZER);
+	uint8_t slice_num = pwm_gpio_to_slice_num(Pins::BUZZER);
 	if(button_state == 0) {
 		pwm_set_enabled(slice_num, true);
 	} else {

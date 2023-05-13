@@ -16,17 +16,17 @@ class FakeScreen : public Screen {
 public:
 	void clear() override {
 	}
-	void draw_line(uint start_x, uint start_y, uint end_x, uint end_y, uint thickness) override {
+	void draw_line(uint8_t start_x, uint8_t start_y, uint8_t end_x, uint8_t end_y, uint8_t thickness) override {
 	}
 	void draw_header(std::string string) override {
 	}
-	void draw_divider_horizontal(uint position_px, uint thickness) override {
+	void draw_divider_horizontal(uint8_t position_px, uint8_t thickness) override {
 	}
-	void draw_divider_vertical(uint position_px, uint thickness) override {
+	void draw_divider_vertical(uint8_t position_px, uint8_t thickness) override {
 	}
-	void draw_text(std::string text, uint x, uint y, FontSize size) override {
+	void draw_text(std::string text, uint8_t x, uint8_t y, FontSize size) override {
 	}
-	void draw_circle(uint center_x, uint center_y, uint radius, Color color) override {
+	void draw_circle(uint8_t center_x, uint8_t center_y, uint8_t radius, Color color) override {
 	}
 	unsigned int get_width() override {
 		return 0;

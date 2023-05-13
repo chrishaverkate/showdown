@@ -16,10 +16,10 @@ void TimeTable::draw() {
 
 	char buffer[15];
 
-	uint first_position = 10;
-	uint step_size = 20;
-	uint position = first_position;
-	uint shot_number = _session->get_shot_count();
+	uint8_t first_position = 10;
+	uint8_t step_size = 20;
+	uint8_t position = first_position;
+	uint8_t shot_number = _session->get_shot_count();
 
 	// TODO: Only draw new shots?
 	auto shots = _session->get_shots();

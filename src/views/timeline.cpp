@@ -21,10 +21,10 @@ void Timeline::draw() {
 
 	char buffer[15];
 
-	uint first_position = 160;
-	uint step_size = 20;
-	uint position = first_position;
-	uint shot_number = 1;
+	uint8_t first_position = 160;
+	uint8_t step_size = 20;
+	uint8_t position = first_position;
+	uint8_t shot_number = 1;
 
 	// TODO: Only draw new shots?
 	for(auto shot : _session->get_shots()) {

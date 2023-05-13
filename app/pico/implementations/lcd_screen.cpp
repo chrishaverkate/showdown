@@ -39,7 +39,7 @@ void LcdScreen::clear() {
 	draw();
 }
 
-void LcdScreen::draw_line(uint start_x, uint start_y, uint end_x, uint end_y, uint thickness) {
+void LcdScreen::draw_line(uint8_t start_x, uint8_t start_y, uint8_t end_x, uint8_t end_y, uint8_t thickness) {
 	Paint_DrawLine(start_x,
 	               start_y + _vertical_offset,
 	               end_x,
@@ -64,7 +64,7 @@ void LcdScreen::draw_header(std::string string) {
 	draw();
 }
 
-void LcdScreen::draw_divider_horizontal(uint position_px, uint thickness) {
+void LcdScreen::draw_divider_horizontal(uint8_t position_px, uint8_t thickness) {
 	Paint_DrawLine(0,
 	               position_px + _vertical_offset,
 	               MAX_WIDTH,
@@ -75,7 +75,7 @@ void LcdScreen::draw_divider_horizontal(uint position_px, uint thickness) {
 	draw();
 }
 
-void LcdScreen::draw_divider_vertical(uint position_px, uint thickness) {
+void LcdScreen::draw_divider_vertical(uint8_t position_px, uint8_t thickness) {
 	Paint_DrawLine(position_px,
 	               1,
 	               position_px,
@@ -86,7 +86,7 @@ void LcdScreen::draw_divider_vertical(uint position_px, uint thickness) {
 	draw();
 }
 
-void LcdScreen::draw_text(std::string text, uint x, uint y, Screen::FontSize size) {
+void LcdScreen::draw_text(std::string text, uint8_t x, uint8_t y, Screen::FontSize size) {
 	Paint_DrawString_EN(x,
 	                    y + _vertical_offset,
 	                    text.c_str(),
@@ -96,7 +96,7 @@ void LcdScreen::draw_text(std::string text, uint x, uint y, Screen::FontSize siz
 	draw();
 }
 
-void LcdScreen::draw_circle(uint center_x, uint center_y, uint radius, Screen::Color color) {
+void LcdScreen::draw_circle(uint8_t center_x, uint8_t center_y, uint8_t radius, Screen::Color color) {
 	Paint_DrawCircle(center_x,
 	                 center_y + _vertical_offset,
 	                 radius,
@@ -106,7 +106,7 @@ void LcdScreen::draw_circle(uint center_x, uint center_y, uint radius, Screen::C
 	draw();
 }
 
-DOT_PIXEL LcdScreen::convert_thickness(uint thickness) {
+DOT_PIXEL LcdScreen::convert_thickness(uint8_t thickness) {
 	DOT_PIXEL result = DOT_PIXEL_1X1;
 
 	switch (thickness) {

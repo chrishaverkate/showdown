@@ -1,7 +1,7 @@
 set(target_name tests-perf)
 
 add_executable(${target_name}
-	message_perf.cpp
+        controller_impl_perf.cpp
 )
 
 set_target_properties(${target_name}
