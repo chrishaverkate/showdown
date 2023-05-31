@@ -18,6 +18,10 @@ void ControllerImpl::draw_current_view() {
 	_views.at(_current_view_index)->draw();
 }
 
+void ControllerImpl::clear_current_view() {
+	_views.at(_current_view_index)->clear();
+}
+
 void ControllerImpl::add_view(ViewType view_type, shared_ptr<Screen> screen) {
 	switch (view_type) {
 	case ViewType::HOME:
@@ -44,11 +48,13 @@ void ControllerImpl::add_view(unique_ptr<View> view) {
 }
 
 void ControllerImpl::button_pressed_a(uint64_t current_time_us) {
+    shot_detected(current_time_us);
 }
 
 void ControllerImpl::button_pressed_b(uint64_t current_time_us) {
 	printf("\tController: button pressed b - %llu\n", current_time_us);
 	_session->start_new_session(current_time_us);
+	clear_current_view();
 	draw_current_view();
 }
 
@@ -61,12 +67,14 @@ void ControllerImpl::button_pressed_down(uint64_t current_time_us) {
 void ControllerImpl::button_pressed_left(uint64_t current_time_us) {
 	_views.at(_current_view_index)->clear();
 	_current_view_index = (_current_view_index - 1) % _views.size();
+	clear_current_view();
 	draw_current_view();
 }
 
 void ControllerImpl::button_pressed_right(uint64_t current_time_us) {
 	_views.at(_current_view_index)->clear();
 	_current_view_index = (_current_view_index + 1) % _views.size();
+	clear_current_view();
 	draw_current_view();
 }
 
@@ -82,3 +90,4 @@ void ControllerImpl::shot_detected(uint64_t current_time_us) {
 void ControllerImpl::override_session(std::shared_ptr<Session> session) {
 	_session = session;
 }
+

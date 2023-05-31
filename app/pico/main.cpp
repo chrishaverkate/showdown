@@ -51,8 +51,8 @@ int main(int argc, char** argv) {
 	controller->add_view(ViewType::DELTA_TABLE, static_cast<std::shared_ptr<Screen>>(&lcd));
 	controller->draw_current_view();
 
-	printf("Setting up fake shot session...\n");
-	build_fake_shot_session(controller);
+//	printf("Setting up fake shot session...\n");
+//	build_fake_shot_session(controller);
 
 	uint64_t count = 0;
 
@@ -118,15 +118,9 @@ void check_button_a(unique_ptr<Controller>& controller) {
 	if (button_state != last_button_state) {
 		if (button_state == 0) {
 			printf("Button A pressed\n");
+            controller->button_pressed_a(get_absolute_time());
 		}
 		last_button_state = button_state;
-	}
-
-	uint8_t slice_num = pwm_gpio_to_slice_num(Pins::BUZZER);
-	if(button_state == 0) {
-		pwm_set_enabled(slice_num, true);
-	} else {
-		pwm_set_enabled(slice_num, false);
 	}
 }
 
@@ -141,6 +135,13 @@ void check_button_b(unique_ptr<Controller>& controller) {
 		}
 		last_button_state = button_state;
 	}
+
+    uint slice_num = pwm_gpio_to_slice_num(Pins::BUZZER);
+    if(button_state == 0) {
+        pwm_set_enabled(slice_num, true);
+    } else {
+        pwm_set_enabled(slice_num, false);
+    }
 }
 
 void check_button_up(unique_ptr<Controller>& controller) {

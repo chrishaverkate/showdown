@@ -15,6 +15,7 @@ public:
 	~ControllerImpl() override = default;
 
 	void draw_current_view() override;
+	void clear_current_view();
 	void add_view(ViewType view_type, std::shared_ptr<Screen> screen) override;
 
 	void add_view(std::unique_ptr<View> view);
