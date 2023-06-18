@@ -14,7 +14,7 @@ void DeltaTable::draw() {
 
 	uint8_t position = POSITION_FIRST_SHOT + (STEP_SIZE * _last_shot_count);
 
-	auto shots = _session->get_shots();
+	auto shots = _session->get_shot_deltas();
 	for (size_t i(_last_shot_count); i < shots.size(); ++i) {
 		_last_shot_count++;
 		auto shot = shots.at(i);
