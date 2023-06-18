@@ -21,7 +21,8 @@ using std::unique_ptr;
 
 void build_fake_shot_session(unique_ptr<Controller>& controller);
 
-uint32_t pwm_setup(uint8_t pin, uint32_t f, int d);
+void shot_detection_isr(uint gpio, uint32_t events);
+uint32_t pwm_setup(uint8_t pin, uint32_t freq);
 void check_button_a(unique_ptr<Controller>& controller);
 void check_button_b(unique_ptr<Controller>& controller);
 void check_button_up(unique_ptr<Controller>& controller);
@@ -30,6 +31,8 @@ void check_button_left(unique_ptr<Controller>& controller);
 void check_button_right(unique_ptr<Controller>& controller);
 void onboard_led_heartbeat();
 void init_io();
+
+bool g_shot_detected = false;
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "EndlessLoop"
@@ -41,7 +44,6 @@ int main(int argc, char** argv) {
 	printf("Setting up LCD Screen...\n");
 	LcdScreen lcd;
 	lcd.initialize();
-//	lcd.draw_header("Showdown");
 
 	printf("Setting up Controller and Views...\n");
 	auto controller = Factory::create_controller();
@@ -50,13 +52,6 @@ int main(int argc, char** argv) {
 	controller->add_view(ViewType::TIME_TABLE, static_cast<std::shared_ptr<Screen>>(&lcd));
 	controller->add_view(ViewType::DELTA_TABLE, static_cast<std::shared_ptr<Screen>>(&lcd));
 	controller->draw_current_view();
-
-//	printf("Setting up fake shot session...\n");
-//	build_fake_shot_session(controller);
-
-	uint64_t count = 0;
-
-	int vertical_offset = 0;
 
 	printf("- Starting Main loop\n");
 	while (true) {
@@ -69,22 +64,57 @@ int main(int argc, char** argv) {
 		check_button_left(controller);
 		check_button_right(controller);
 
-//		if (count++ % 10000000 == 0) {
-//			printf("Still alive! %llu\n", time_us_64());
-//		}
+		if (g_shot_detected) {
+			g_shot_detected = false;
+			controller->shot_detected(get_absolute_time());
+		}
 	}
 
 	return 0;
 }
 #pragma clang diagnostic pop
 
-void build_fake_shot_session(unique_ptr<Controller>& controller) {
-	uint64_t start_time = 0;
-    controller->button_pressed_b(start_time);
-	controller->shot_detected(start_time + 1100000);
-	controller->shot_detected(start_time + 1500000);
-	controller->shot_detected(start_time + 1850000);
-	controller->shot_detected(start_time + 2930000);
+void init_io() {
+	stdio_init_all();
+
+	// On-baord LED for heartbeat
+	gpio_init(Pins::OB_LED);
+	gpio_set_dir(Pins::OB_LED, GPIO_OUT);
+
+	// User Buttons
+	gpio_init(Pins::UI_BTN_UP);
+	gpio_set_dir(Pins::UI_BTN_UP, GPIO_IN);
+	gpio_pull_up(Pins::UI_BTN_UP);
+
+	gpio_init(Pins::UI_BTN_DOWN);
+	gpio_set_dir(Pins::UI_BTN_DOWN, GPIO_IN);
+	gpio_pull_up(Pins::UI_BTN_DOWN);
+
+	gpio_init(Pins::UI_BTN_LEFT);
+	gpio_set_dir(Pins::UI_BTN_LEFT, GPIO_IN);
+	gpio_pull_up(Pins::UI_BTN_LEFT);
+
+	gpio_init(Pins::UI_BTN_RIGHT);
+	gpio_set_dir(Pins::UI_BTN_RIGHT, GPIO_IN);
+	gpio_pull_up(Pins::UI_BTN_RIGHT);
+
+	gpio_init(Pins::UI_BTN_A);
+	gpio_set_dir(Pins::UI_BTN_A, GPIO_IN);
+	gpio_pull_up(Pins::UI_BTN_A);
+
+	gpio_init(Pins::UI_BTN_B);
+	gpio_set_dir(Pins::UI_BTN_B, GPIO_IN);
+	gpio_pull_up(Pins::UI_BTN_B);
+
+	// Buzzer
+	pwm_setup(Pins::BUZZER, 1500);
+
+	// Shot detection interrupt
+	gpio_init(Pins::SHOT_DETECTION);
+	gpio_pull_up(Pins::SHOT_DETECTION);
+	gpio_set_irq_enabled_with_callback(Pins::SHOT_DETECTION, GPIO_IRQ_EDGE_FALL, true, &shot_detection_isr);
+
+	printf("\n\n -> IO Initialized!\n");
 }
 
 /** @brief Setup the an IO pin as a PWM output
@@ -109,6 +139,17 @@ uint32_t pwm_setup(uint8_t pin, uint32_t freq) {
 	pwm_set_wrap(slice_num, wrap);
 	pwm_set_chan_level(slice_num, chan, wrap * duty_cycle / 100);
 	return wrap;
+}
+
+void shot_detection_isr(uint gpio, uint32_t events) {
+	printf("Shot detected!\n");
+//	static const int debounce_delay = 50;
+
+	if (gpio == Pins::SHOT_DETECTION) {
+		if (gpio_get(Pins::SHOT_DETECTION) == 0) {
+			g_shot_detected = true;
+		}
+	}
 }
 
 void check_button_a(unique_ptr<Controller>& controller) {
@@ -194,43 +235,6 @@ void check_button_right(unique_ptr<Controller>& controller) {
 		}
 		last_button_state = button_state;
 	}
-}
-
-
-
-void init_io() {
-	stdio_init_all();
-	gpio_init(Pins::OB_LED);
-	gpio_set_dir(Pins::OB_LED, GPIO_OUT);
-
-	gpio_init(Pins::UI_BTN_UP);
-	gpio_set_dir(Pins::UI_BTN_UP, GPIO_IN);
-	gpio_pull_up(Pins::UI_BTN_UP);
-
-	gpio_init(Pins::UI_BTN_DOWN);
-	gpio_set_dir(Pins::UI_BTN_DOWN, GPIO_IN);
-	gpio_pull_up(Pins::UI_BTN_DOWN);
-
-	gpio_init(Pins::UI_BTN_LEFT);
-	gpio_set_dir(Pins::UI_BTN_LEFT, GPIO_IN);
-	gpio_pull_up(Pins::UI_BTN_LEFT);
-
-	gpio_init(Pins::UI_BTN_RIGHT);
-	gpio_set_dir(Pins::UI_BTN_RIGHT, GPIO_IN);
-	gpio_pull_up(Pins::UI_BTN_RIGHT);
-
-	gpio_init(Pins::UI_BTN_A);
-	gpio_set_dir(Pins::UI_BTN_A, GPIO_IN);
-	gpio_pull_up(Pins::UI_BTN_A);
-
-	gpio_init(Pins::UI_BTN_B);
-	gpio_set_dir(Pins::UI_BTN_B, GPIO_IN);
-	gpio_pull_up(Pins::UI_BTN_B);
-
-	pwm_setup(Pins::BUZZER, 1500);
-
-
-	printf("\n\n -> IO Initialized!\n");
 }
 
 void onboard_led_heartbeat() {

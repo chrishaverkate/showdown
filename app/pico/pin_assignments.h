@@ -18,6 +18,9 @@ static const uint8_t OB_LED = 25;    // On-board LED - show pico has life
 static const uint8_t BUZZER = 21;    // Buzzer
 static const uint8_t DEAD_PIN = 5;   // Do not use this pin
 
+// Shot detection
+static const uint8_t SHOT_DETECTION = 4;
+
 /*******************************************************************************
  * Communications
  ******************************************************************************/
