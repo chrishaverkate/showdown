@@ -19,7 +19,7 @@ void LcdScreen::initialize() {
 	LCD_1IN14_Init(VERTICAL);
 	LCD_1IN14_Clear(WHITE);
 
-	Paint_NewImage((UBYTE*)_display_buffer, LCD_1IN14.WIDTH, LCD_1IN14.HEIGHT, 0, WHITE);
+	Paint_NewImage((UBYTE*)_display_buffer, MAX_WIDTH, MAX_HEIGHT, 0, WHITE);
 	Paint_SetScale(65);
 	Paint_Clear(WHITE);
 	Paint_SetRotate(ROTATE_180);
@@ -181,14 +181,17 @@ _tFont* LcdScreen::convert_font(FontSize size) {
 	case Screen::FontSize::LARGE:
 		result = &Font20;
 		break;
+	case Screen::FontSize::XL:
+		result = &Font24;
+		break;
 	}
 
 	return result;
 }
 unsigned int LcdScreen::get_width() {
-	return 0;
+	return MAX_WIDTH;
 }
 
 unsigned int LcdScreen::get_height() {
-	return 0;
+	return MAX_HEIGHT;
 }

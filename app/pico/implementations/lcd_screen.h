@@ -32,8 +32,8 @@ public:
 private:
 	uint16_t* _display_buffer{};
 
-	static constexpr uint16_t MAX_WIDTH = LCD_1IN14_WIDTH;
-	static constexpr uint16_t MAX_HEIGHT = LCD_1IN14_HEIGHT;
+	static constexpr uint8_t MAX_WIDTH = LCD_1IN14_WIDTH;
+	static constexpr uint8_t MAX_HEIGHT = LCD_1IN14_HEIGHT;
 
 	// a positive offset is the number of pixels to move the screen down
 	uint16_t _vertical_offset = 0;

@@ -10,7 +10,8 @@ public:
 	enum class FontSize {
 		SMALL,
 		MEDIUM,
-		LARGE
+		LARGE,
+		XL
 	};
 
 	enum class Color {

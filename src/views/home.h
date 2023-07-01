@@ -17,4 +17,7 @@ public:
 private:
 	std::shared_ptr<Session> _session;
 	std::shared_ptr<Screen> _screen;
+	size_t _last_shot_count = 0;
+
+	void draw_structure();
 };
