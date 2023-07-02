@@ -537,7 +537,7 @@ void Paint_DrawString_EN_Scaled(UWORD Xstart, UWORD Ystart, const char* pString,
 	UWORD Xpoint = Xstart;
 	UWORD Ypoint = Ystart;
 
-	printf("Paint_DrawString_EN_Scaled: %d %d %s %d %d %d\r\n", Xstart, Ystart, pString, Font->Width, Font->Height, scale);
+//	printf("Paint_DrawString_EN_Scaled: %d %d %s %d %d %d\r\n", Xstart, Ystart, pString, Font->Width, Font->Height, scale);
 
 	const bool invalid_start_position = Xstart > Paint.Width || Ystart > Paint.Height;
 	if (invalid_start_position) {
@@ -566,7 +566,7 @@ void Paint_DrawString_EN_Scaled(UWORD Xstart, UWORD Ystart, const char* pString,
 		pString++;
 
 		//The next word of the abscissa increases the font of the broadband
-		Xpoint += (Font->Width * scale);
+		Xpoint += (Font->Width * scale) - 15;
 	}
 }
 
@@ -585,7 +585,11 @@ void Paint_DrawChar_Scaled(UWORD Xpoint, UWORD Ypoint, const char Acsii_Char, sF
 
 	// from top down, left to right, of the source character template
 	for (Page = 0; Page < Font->Height; Page++) {
-		for (Column = 0; Column < Font->Width; Column++) {
+		for (Column = 0; Column < Font->Width - 0; Column++) {
+
+			if (Column < 2 || Column > Font->Width - 2) {
+				continue;
+			}
 
 			for (int x = 0; x < scale; ++x) {
 				for (int y = 0; y < scale; ++y) {
@@ -605,12 +609,14 @@ void Paint_DrawChar_Scaled(UWORD Xpoint, UWORD Ypoint, const char Acsii_Char, sF
 			}
 
 			//One pixel is 8 bits
-			if (Column % 8 == 7)
+			if (Column % 8 == 7) {
 				ptr++;
-
+			}
 		}  // Write a line
-		if (Font->Width % 8 != 0)
+
+		if (Font->Width % 8 != 0) {
 			ptr++;
+		}
 
 	}  // Write all
 }
