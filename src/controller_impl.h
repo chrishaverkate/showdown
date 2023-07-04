@@ -31,9 +31,14 @@ public:
 
 	void override_session(std::shared_ptr<Session> session);
 
+	void register_new_session_callback(new_session_callback callback) override;
+
 private:
+	new_session_callback _new_session_callback = &ControllerImpl::safe_new_session_callback;
 	std::vector<std::unique_ptr<View>> _views {};
 	size_t _current_view_index = -1;
 
 	std::shared_ptr<Session> _session = std::make_shared<Session>();
+
+	static void safe_new_session_callback(uint64_t current_time_us) { /* safer than nullptr */ }
 };

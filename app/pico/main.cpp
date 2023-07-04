@@ -3,6 +3,8 @@
 #include <pico/stdlib.h>
 #include <hardware/pwm.h>
 #include <stdio.h>
+#include <vector>
+
 
 #include "pin_assignments.h"
 
@@ -18,21 +20,26 @@ using std::make_shared;
 using std::make_unique;
 using std::shared_ptr;
 using std::unique_ptr;
+using std::vector;
 
 void build_fake_shot_session(unique_ptr<Controller>& controller);
 
 void shot_detection_isr(uint gpio, uint32_t events);
 uint32_t pwm_setup(uint8_t pin, uint32_t freq);
-void check_button_a(unique_ptr<Controller>& controller);
-void check_button_b(unique_ptr<Controller>& controller);
-void check_button_up(unique_ptr<Controller>& controller);
-void check_button_down(unique_ptr<Controller>& controller);
-void check_button_left(unique_ptr<Controller>& controller);
-void check_button_right(unique_ptr<Controller>& controller);
+
+void service_buzzer();
+void start_buzzer(uint64_t start_time_us);
+void stop_buzzer();
+
+template<uint8_t pin>
+bool button_pressed();
+
 void onboard_led_heartbeat();
 void init_io();
 
-bool g_shot_detected = false;
+bool g_shot_detected = false;  ///< set by the ISR and serviced + cleared when ack'd
+bool g_buzzer_active = false;  ///< set by a callback from the controller and cleared when duration is finished.
+uint64_t g_session_started = 0; ///< set by the callback from the controller when a session is started.
 
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "EndlessLoop"
@@ -53,16 +60,59 @@ int main(int argc, char** argv) {
 	controller->add_view(ViewType::DELTA_TABLE, static_cast<std::shared_ptr<Screen>>(&lcd));
 	controller->draw_current_view();
 
+	controller->register_new_session_callback(&start_buzzer);
+
+	// Create lambda functions to help wrap the use of a template and reduce the number of functions
+	// that are nearly alike.
+	auto service_button_a = [&controller]() {
+		if (button_pressed<Pins::UI_BTN_A>()) {
+			controller->button_pressed_a(get_absolute_time());
+		}
+	};
+
+	auto service_button_b = [&controller]() {
+		if (button_pressed<Pins::UI_BTN_B>()) {
+			controller->button_pressed_b(get_absolute_time());
+		}
+	};
+
+	auto service_button_up = [&controller]() {
+		if (button_pressed<Pins::UI_BTN_UP>()) {
+			controller->button_pressed_up(get_absolute_time());
+		}
+	};
+
+	auto service_button_down = [&controller]() {
+		if (button_pressed<Pins::UI_BTN_DOWN>()) {
+			controller->button_pressed_down(get_absolute_time());
+		}
+	};
+
+	auto service_button_left = [&controller]() {
+		if (button_pressed<Pins::UI_BTN_LEFT>()) {
+			controller->button_pressed_left(get_absolute_time());
+		}
+	};
+
+	auto service_button_right = [&controller]() {
+		if (button_pressed<Pins::UI_BTN_RIGHT>()) {
+			controller->button_pressed_right(get_absolute_time());
+		}
+	};
+
+
 	printf("- Starting Main loop\n");
 	while (true) {
 		onboard_led_heartbeat();
 
-		check_button_a(controller);
-		check_button_b(controller);
-		check_button_up(controller);
-		check_button_down(controller);
-		check_button_left(controller);
-		check_button_right(controller);
+		service_button_a();
+		service_button_b();
+		service_button_up();
+		service_button_down();
+		service_button_left();
+		service_button_right();
+
+		service_buzzer();
 
 		if (g_shot_detected) {
 			g_shot_detected = false;
@@ -152,89 +202,46 @@ void shot_detection_isr(uint gpio, uint32_t events) {
 	}
 }
 
-void check_button_a(unique_ptr<Controller>& controller) {
+template<uint8_t pin>
+bool button_pressed() {
 	static int last_button_state = 0;
-	const int button_state = gpio_get(Pins::UI_BTN_A);
+	const int button_state = gpio_get(pin);
 
 	if (button_state != last_button_state) {
 		if (button_state == 0) {
-			printf("Button A pressed\n");
-            controller->button_pressed_a(get_absolute_time());
+			printf("Button %d pressed\n", pin);
+			return true;
 		}
 		last_button_state = button_state;
+	}
+
+	return false;
+}
+
+void service_buzzer() {
+	static const uint64_t DURATION = 100 * 100 * 2;
+
+	if(g_buzzer_active) {
+		const uint64_t now = get_absolute_time();
+		const bool buzzer_finished = (now - g_session_started) > DURATION;
+
+		if (buzzer_finished) {
+			stop_buzzer();
+		}
 	}
 }
 
-void check_button_b(unique_ptr<Controller>& controller) {
-	static int last_button_state = 0;
-	const int button_state = gpio_get(Pins::UI_BTN_B);
-
-	if (button_state != last_button_state) {
-		if (button_state == 0) {
-			printf("button: B\n");
-			controller->button_pressed_b(get_absolute_time());
-		}
-		last_button_state = button_state;
-	}
-
+void start_buzzer(uint64_t start_time_us) {
     uint slice_num = pwm_gpio_to_slice_num(Pins::BUZZER);
-    if(button_state == 0) {
-        pwm_set_enabled(slice_num, true);
-    } else {
-        pwm_set_enabled(slice_num, false);
-    }
+	pwm_set_enabled(slice_num, true);
+	g_buzzer_active = true;
+	g_session_started = start_time_us;
 }
 
-void check_button_up(unique_ptr<Controller>& controller) {
-	static int last_button_state = 0;
-	const int button_state = gpio_get(Pins::UI_BTN_UP);
-
-	if (button_state != last_button_state) {
-		if (button_state == 0) {
-			printf("button: up\n");
-			controller->button_pressed_up(get_absolute_time());
-		}
-		last_button_state = button_state;
-	}
-}
-
-void check_button_down(unique_ptr<Controller>& controller) {
-	static int last_button_state = 0;
-	const int button_state = gpio_get(Pins::UI_BTN_DOWN);
-
-	if (button_state != last_button_state) {
-		if (button_state == 0) {
-			printf("button: down\n");
-			controller->button_pressed_down(get_absolute_time());
-		}
-		last_button_state = button_state;
-	}
-}
-
-void check_button_left(unique_ptr<Controller>& controller) {
-	static int last_button_state = 0;
-	const int button_state = gpio_get(Pins::UI_BTN_LEFT);
-
-	if (button_state != last_button_state) {
-		if (button_state == 0) {
-			printf("button: left\n");
-			controller->button_pressed_left(get_absolute_time());
-		}
-		last_button_state = button_state;
-	}
-}
-
-void check_button_right(unique_ptr<Controller>& controller) {
-	static int last_button_state = 0;
-	const int button_state = gpio_get(Pins::UI_BTN_RIGHT);
-
-	if (button_state != last_button_state) {
-		if (button_state == 0) {
-			printf("button: right\n");
-			controller->button_pressed_right(get_absolute_time());
-		}
-		last_button_state = button_state;
-	}
+void stop_buzzer() {
+	uint slice_num = pwm_gpio_to_slice_num(Pins::BUZZER);
+	pwm_set_enabled(slice_num, false);
+	g_buzzer_active = false;
 }
 
 void onboard_led_heartbeat() {

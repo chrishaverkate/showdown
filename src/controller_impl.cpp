@@ -1,4 +1,6 @@
 #include "controller_impl.h"
+
+#include <utility>
 #include "views/delta_table.h"
 #include "views/home.h"
 #include "views/time_table.h"
@@ -40,7 +42,7 @@ void ControllerImpl::add_view(ViewType view_type, shared_ptr<Screen> screen) {
 }
 
 void ControllerImpl::add_view(unique_ptr<View> view) {
-	_views.push_back(move(view));
+	_views.push_back(std::move(view));
 
 	if(_views.size() == 1) {
 		_current_view_index = 0;
@@ -52,8 +54,9 @@ void ControllerImpl::button_pressed_a(uint64_t current_time_us) {
 }
 
 void ControllerImpl::button_pressed_b(uint64_t current_time_us) {
-	printf("\tController: button pressed b - %llu\n", current_time_us);
+	printf("\tController: starting new session - %llu\n", current_time_us);
 	_session->start_new_session(current_time_us);
+	_new_session_callback(current_time_us);
 	clear_current_view();
 	draw_current_view();
 }
@@ -88,6 +91,9 @@ void ControllerImpl::shot_detected(uint64_t current_time_us) {
 }
 
 void ControllerImpl::override_session(std::shared_ptr<Session> session) {
-	_session = session;
+	_session = std::move(session);
 }
 
+void ControllerImpl::register_new_session_callback(new_session_callback callback) {
+	_new_session_callback = callback;
+}
