@@ -9,6 +9,7 @@ add_library(${target_name}
 
 		views/delta_table.cpp
 		views/home.cpp
+		views/system_info.cpp
 		views/timeline.cpp
 		views/time_table.cpp
 )

@@ -1,3 +1,5 @@
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "EndlessLoop"
 #include <memory>
 #include <pico/binary_info.h>
 #include <pico/stdlib.h>
@@ -58,6 +60,7 @@ int main(int argc, char** argv) {
 	controller->add_view(ViewType::TIMELINE, static_cast<std::shared_ptr<Screen>>(&lcd));
 	controller->add_view(ViewType::TIME_TABLE, static_cast<std::shared_ptr<Screen>>(&lcd));
 	controller->add_view(ViewType::DELTA_TABLE, static_cast<std::shared_ptr<Screen>>(&lcd));
+	controller->add_view(ViewType::SYSTEM_INFO, static_cast<std::shared_ptr<Screen>>(&lcd));
 	controller->draw_current_view();
 
 	controller->register_new_session_callback(&start_buzzer);
@@ -257,3 +260,5 @@ void onboard_led_heartbeat() {
 		gpio_put(Pins::OB_LED, state);
 	}
 }
+
+#pragma clang diagnostic pop

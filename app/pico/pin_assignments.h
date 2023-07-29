@@ -40,8 +40,8 @@ static const uint8_t UART_RX = 1;
 //static const uint8_t I2C_0_SCL = 21;
 
 // i2c port 1
-static const uint8_t I2C_1_SDA = 26;
-static const uint8_t I2C_1_SCL = 27;
+//static const uint8_t I2C_1_SDA = 26;
+//static const uint8_t I2C_1_SCL = 27;
 
 /*******************************************************************************
  * Reserved for LCD

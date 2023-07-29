@@ -5,4 +5,5 @@ enum class ViewType {
 	TIMELINE,
 	TIME_TABLE,
 	DELTA_TABLE,
+	SYSTEM_INFO,
 };
