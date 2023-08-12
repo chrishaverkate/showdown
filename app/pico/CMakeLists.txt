@@ -13,6 +13,7 @@ add_executable(${target_name}
 
 	implementations/button.cpp
 	implementations/lcd_screen.cpp
+	implementations/pico_system.cpp
 )
 
 target_link_libraries(${target_name}

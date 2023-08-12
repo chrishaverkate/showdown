@@ -1,7 +1,6 @@
 #pragma once
 
-// TODO: create new model for collecting system data (voltage, etc).
-//#include "../models/session.h"
+#include <showdown/system.h>
 
 #include "view.h"
 
@@ -11,14 +10,15 @@
 
 class SystemInfo : public View {
 public:
-	explicit SystemInfo(std::shared_ptr<Screen> screen);
+	explicit SystemInfo(std::shared_ptr<System> system, std::shared_ptr<Screen> screen);
 	~SystemInfo() override = default;
 	void draw() override;
 	void clear() override;
 
 private:
-//	std::shared_ptr<Session> _session;
+	std::shared_ptr<System> _system;
 	std::shared_ptr<Screen> _screen;
+	bool _first_draw = true;
 
 	void draw_structure();
 };

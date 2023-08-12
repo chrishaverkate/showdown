@@ -1,9 +1,12 @@
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "EndlessLoop"
+
+
 #include <memory>
 #include <pico/binary_info.h>
 #include <pico/stdlib.h>
 #include <hardware/pwm.h>
+#include <hardware/adc.h>
 #include <stdio.h>
 #include <vector>
 
@@ -11,6 +14,7 @@
 #include "pin_assignments.h"
 
 #include "implementations/lcd_screen.h"
+#include "implementations/pico_system.h"
 
 #include <showdown/controller.h>
 #include <showdown/event_receiver.h>
@@ -37,6 +41,7 @@ template<uint8_t pin>
 bool button_pressed();
 
 void onboard_led_heartbeat();
+void update_system_info(PicoSystem& system, Controller& controller);
 void init_io();
 
 bool g_shot_detected = false;  ///< set by the ISR and serviced + cleared when ack'd
@@ -54,13 +59,16 @@ int main(int argc, char** argv) {
 	LcdScreen lcd;
 	lcd.initialize();
 
+	printf("Setting up PicoSystem Model...\n");
+	PicoSystem pico_system;
+
 	printf("Setting up Controller and Views...\n");
 	auto controller = Factory::create_controller();
 	controller->add_view(ViewType::HOME, static_cast<std::shared_ptr<Screen>>(&lcd));
 	controller->add_view(ViewType::TIMELINE, static_cast<std::shared_ptr<Screen>>(&lcd));
 	controller->add_view(ViewType::TIME_TABLE, static_cast<std::shared_ptr<Screen>>(&lcd));
 	controller->add_view(ViewType::DELTA_TABLE, static_cast<std::shared_ptr<Screen>>(&lcd));
-	controller->add_view(ViewType::SYSTEM_INFO, static_cast<std::shared_ptr<Screen>>(&lcd));
+	controller->add_view(ViewType::SYSTEM_INFO, static_cast<std::shared_ptr<System>>(&pico_system), static_cast<std::shared_ptr<Screen>>(&lcd));
 	controller->draw_current_view();
 
 	controller->register_new_session_callback(&start_buzzer);
@@ -107,6 +115,7 @@ int main(int argc, char** argv) {
 	printf("- Starting Main loop\n");
 	while (true) {
 		onboard_led_heartbeat();
+		update_system_info(pico_system, *controller);
 
 		service_button_a();
 		service_button_b();
@@ -129,6 +138,14 @@ int main(int argc, char** argv) {
 
 void init_io() {
 	stdio_init_all();
+
+	// USB Power Sense
+	gpio_init(Pins::SENSE_USB_POWER);
+	gpio_set_dir(Pins::SENSE_USB_POWER, GPIO_IN);
+
+	adc_init();
+	adc_gpio_init(Pins::SENSE_VOLTAGE_VSYS);
+	adc_select_input(3);
 
 	// On-baord LED for heartbeat
 	gpio_init(Pins::OB_LED);
@@ -258,6 +275,18 @@ void onboard_led_heartbeat() {
 		state = !state;
 		last_time = now;
 		gpio_put(Pins::OB_LED, state);
+	}
+}
+
+void update_system_info(PicoSystem& system, Controller& controller) {
+	static const uint64_t HB_PERIOD = 500000;  // us
+	static uint64_t last_time = 0;
+
+	const uint64_t now = get_absolute_time();
+
+	if ((now - last_time) > HB_PERIOD) {
+		system.update();
+//		controller.draw_current_view();
 	}
 }
 

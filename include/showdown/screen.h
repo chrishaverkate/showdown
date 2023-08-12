@@ -22,6 +22,7 @@ public:
 		GREEN,
 		BLUE,
 		YELLOW,
+		ORANGE,
 		CYAN,
 		MAGENTA
 	};
@@ -49,4 +50,6 @@ public:
 	virtual void draw_text(std::string text, uint8_t x, uint8_t y, FontSize size) = 0;
 
 	virtual void draw_circle(uint8_t center_x, uint8_t center_y, uint8_t radius, Color color) = 0;
+
+	virtual void draw_rectangle(uint8_t x, uint8_t y, uint8_t width, uint8_t height, Color color) = 0;
 };

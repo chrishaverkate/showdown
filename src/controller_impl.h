@@ -2,6 +2,7 @@
 
 #include <showdown/controller.h>
 #include <showdown/screen.h>
+#include <showdown/system.h>
 
 #include "models/session.h"
 #include "views/view.h"
@@ -17,6 +18,7 @@ public:
 	void draw_current_view() override;
 	void clear_current_view();
 	void add_view(ViewType view_type, std::shared_ptr<Screen> screen) override;
+	void add_view(ViewType view_type, std::shared_ptr<System> system, std::shared_ptr<Screen> screen) override;
 
 	void add_view(std::unique_ptr<View> view);
 

@@ -2,6 +2,7 @@
 
 #include "screen.h"
 #include "view_type.h"
+#include "system.h"
 
 #include <memory>
 
@@ -16,6 +17,7 @@ public:
 	virtual void draw_current_view() = 0;
 
 	virtual void add_view(ViewType view_type, std::shared_ptr<Screen> screen) = 0;
+	virtual void add_view(ViewType view_type, std::shared_ptr<System> system, std::shared_ptr<Screen> screen) = 0;
 
 	virtual void button_pressed_a(uint64_t current_time_us) = 0;
 	virtual void button_pressed_b(uint64_t current_time_us) = 0;

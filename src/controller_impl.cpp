@@ -39,8 +39,19 @@ void ControllerImpl::add_view(ViewType view_type, shared_ptr<Screen> screen) {
 	case ViewType::DELTA_TABLE:
 		add_view(make_unique<DeltaTable>(_session, screen));
 		break;
+	default:
+		printf("Controller: unknown view type\n");
+		break;
+	}
+}
+
+void ControllerImpl::add_view(ViewType view_type, std::shared_ptr<System> system, std::shared_ptr<Screen> screen) {
+	switch (view_type) {
 	case ViewType::SYSTEM_INFO:
-		add_view(make_unique<SystemInfo>(screen));
+		add_view(make_unique<SystemInfo>(system, screen));
+		break;
+	default:
+		printf("Controller: unknown view type\n");
 		break;
 	}
 }

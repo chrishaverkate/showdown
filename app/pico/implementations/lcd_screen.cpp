@@ -106,6 +106,17 @@ void LcdScreen::draw_circle(uint8_t center_x, uint8_t center_y, uint8_t radius, 
 	draw();
 }
 
+void LcdScreen::draw_rectangle(uint8_t x, uint8_t y, uint8_t width, uint8_t height, Color color) {
+	Paint_DrawRectangle(x,
+	                    y + _vertical_offset,
+	                    x + width,
+	                    y + height + _vertical_offset,
+	                    convert_color(color),
+	                    DOT_PIXEL_1X1,
+	                    DRAW_FILL_FULL);
+	draw();
+}
+
 DOT_PIXEL LcdScreen::convert_thickness(uint8_t thickness) {
 	DOT_PIXEL result = DOT_PIXEL_1X1;
 
@@ -156,6 +167,9 @@ uint16_t LcdScreen::convert_color(Color color) {
 		break;
 	case Color::YELLOW:
 		result = YELLOW;
+		break;
+	case Color::ORANGE:
+		result = BRRED;
 		break;
 	case Color::CYAN:
 		result = CYAN;
