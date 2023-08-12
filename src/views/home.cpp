@@ -6,6 +6,10 @@ Home::Home(std::shared_ptr<Session> session, std::shared_ptr<Screen> screen)
 }
 
 void Home::draw() {
+	if (!_active) {
+		return;
+	}
+
 	printf("\tHome: draw\n");
 	char buffer[15];
 

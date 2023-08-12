@@ -5,6 +5,10 @@ DeltaTable::DeltaTable(std::shared_ptr<Session> session, std::shared_ptr<Screen>
 }
 
 void DeltaTable::draw() {
+	if (!_active) {
+		return;
+	}
+
 	printf("\tDeltaTable: draw\n");
 	char buffer[15];
 

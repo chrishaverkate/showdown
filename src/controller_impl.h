@@ -18,7 +18,7 @@ public:
 	void draw_current_view() override;
 	void clear_current_view();
 	void add_view(ViewType view_type, std::shared_ptr<Screen> screen) override;
-	void add_view(ViewType view_type, std::shared_ptr<System> system, std::shared_ptr<Screen> screen) override;
+	const std::unique_ptr<ModelUpdatedReceiver>& add_view(ViewType view_type, std::shared_ptr<System> system, std::shared_ptr<Screen> screen) override;
 
 	void add_view(std::unique_ptr<View> view);
 

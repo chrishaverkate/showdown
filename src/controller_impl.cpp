@@ -18,10 +18,12 @@ void ControllerImpl::draw_current_view() {
 		printf("Controller: no views to draw\n");
 		return;
 	}
+	_views.at(_current_view_index)->activate();
 	_views.at(_current_view_index)->draw();
 }
 
 void ControllerImpl::clear_current_view() {
+	_views.at(_current_view_index)->deactivate();
 	_views.at(_current_view_index)->clear();
 }
 
@@ -45,15 +47,14 @@ void ControllerImpl::add_view(ViewType view_type, shared_ptr<Screen> screen) {
 	}
 }
 
-void ControllerImpl::add_view(ViewType view_type, std::shared_ptr<System> system, std::shared_ptr<Screen> screen) {
+const std::unique_ptr<ModelUpdatedReceiver>& ControllerImpl::add_view(ViewType view_type, std::shared_ptr<System> system, std::shared_ptr<Screen> screen) {
 	switch (view_type) {
 	case ViewType::SYSTEM_INFO:
 		add_view(make_unique<SystemInfo>(system, screen));
-		break;
-	default:
-		printf("Controller: unknown view type\n");
+		return reinterpret_cast<unique_ptr<ModelUpdatedReceiver>&&>(_views.back());
 		break;
 	}
+
 }
 
 void ControllerImpl::add_view(unique_ptr<View> view) {
@@ -83,22 +84,20 @@ void ControllerImpl::button_pressed_down(uint64_t current_time_us) {
 }
 
 void ControllerImpl::button_pressed_left(uint64_t current_time_us) {
-	_views.at(_current_view_index)->clear();
-
+	clear_current_view();
 	if (_current_view_index == 0) {
 		_current_view_index = _views.size() - 1;
 	} else {
 		--_current_view_index;
 	}
 
-	clear_current_view();
+
 	draw_current_view();
 }
 
 void ControllerImpl::button_pressed_right(uint64_t current_time_us) {
-	_views.at(_current_view_index)->clear();
-	_current_view_index = (_current_view_index + 1) % _views.size();
 	clear_current_view();
+	_current_view_index = (_current_view_index + 1) % _views.size();
 	draw_current_view();
 }
 

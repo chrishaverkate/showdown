@@ -9,6 +9,10 @@ Timeline::Timeline(std::shared_ptr<Session> session, std::shared_ptr<Screen> scr
 }
 
 void Timeline::draw() {
+	if (!_active) {
+		return;
+	}
+
 	printf("\tTimeline: draw\n");
 	char buffer[15];
 
@@ -45,3 +49,4 @@ void Timeline::draw_structure() {
 	_screen->draw_divider_vertical(40, 1);
 	_screen->draw_divider_horizontal(190, 1);
 }
+

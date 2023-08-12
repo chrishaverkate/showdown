@@ -5,6 +5,10 @@ TimeTable::TimeTable(std::shared_ptr<Session> session, std::shared_ptr<Screen> s
 }
 
 void TimeTable::draw() {
+	if (!_active) {
+		return;
+	}
+
 	printf("\tTimeTable: draw\n");
 	char buffer[15];
 

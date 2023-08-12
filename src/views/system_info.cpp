@@ -6,6 +6,10 @@ SystemInfo::SystemInfo(std::shared_ptr<System> system, std::shared_ptr<Screen> s
 }
 
 void SystemInfo::draw() {
+	if (!_active) {
+		return;
+	}
+
 	printf("\tSysInfo: draw\n");
 	const char* usb_power = _system->get_usb_power() ? "ON" : "OFF";
 	char buffer[15];
@@ -40,6 +44,7 @@ void SystemInfo::draw() {
 		fill_width = battery_width;
 	}
 
+
 	// Fill Battery
 	if(battery_percentage > 80.0f) {
 		fill_color = Screen::Color::GREEN;
@@ -51,6 +56,7 @@ void SystemInfo::draw() {
 		fill_color = Screen::Color::RED;
 	}
 
+	_screen->draw_rectangle(2 + fill_width + 1, 71, battery_width - fill_width - 1, battery_height, Screen::Color::BLACK);
 	_screen->draw_rectangle(2, 71, fill_width, battery_height, fill_color);
 }
 
@@ -73,4 +79,7 @@ void SystemInfo::draw_structure() {
 	_screen->draw_line(90, 75, 95, 75, 1);
 	_screen->draw_line(90, 85, 95, 85, 1);
 	_screen->draw_line(95, 75, 95, 85, 1);
+}
+void SystemInfo::model_updated() {
+	draw();
 }

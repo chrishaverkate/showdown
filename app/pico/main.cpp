@@ -41,7 +41,7 @@ template<uint8_t pin>
 bool button_pressed();
 
 void onboard_led_heartbeat();
-void update_system_info(PicoSystem& system, Controller& controller);
+void update_system_info(PicoSystem& system, const unique_ptr<ModelUpdatedReceiver>& model_updated_receiver);
 void init_io();
 
 bool g_shot_detected = false;  ///< set by the ISR and serviced + cleared when ack'd
@@ -68,7 +68,7 @@ int main(int argc, char** argv) {
 	controller->add_view(ViewType::TIMELINE, static_cast<std::shared_ptr<Screen>>(&lcd));
 	controller->add_view(ViewType::TIME_TABLE, static_cast<std::shared_ptr<Screen>>(&lcd));
 	controller->add_view(ViewType::DELTA_TABLE, static_cast<std::shared_ptr<Screen>>(&lcd));
-	controller->add_view(ViewType::SYSTEM_INFO, static_cast<std::shared_ptr<System>>(&pico_system), static_cast<std::shared_ptr<Screen>>(&lcd));
+	auto& system_info_view = controller->add_view(ViewType::SYSTEM_INFO, static_cast<std::shared_ptr<System>>(&pico_system), static_cast<std::shared_ptr<Screen>>(&lcd));
 	controller->draw_current_view();
 
 	controller->register_new_session_callback(&start_buzzer);
@@ -115,7 +115,7 @@ int main(int argc, char** argv) {
 	printf("- Starting Main loop\n");
 	while (true) {
 		onboard_led_heartbeat();
-		update_system_info(pico_system, *controller);
+		update_system_info(pico_system, system_info_view);
 
 		service_button_a();
 		service_button_b();
@@ -278,15 +278,15 @@ void onboard_led_heartbeat() {
 	}
 }
 
-void update_system_info(PicoSystem& system, Controller& controller) {
-	static const uint64_t HB_PERIOD = 500000;  // us
+void update_system_info(PicoSystem& system, const unique_ptr<ModelUpdatedReceiver>& model_updated_receiver) {
+	static const uint64_t HB_PERIOD = 5000000;  // us
 	static uint64_t last_time = 0;
 
 	const uint64_t now = get_absolute_time();
 
 	if ((now - last_time) > HB_PERIOD) {
 		system.update();
-//		controller.draw_current_view();
+		model_updated_receiver->model_updated();
 	}
 }
 
