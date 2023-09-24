@@ -26,7 +26,7 @@ static const uint8_t BUZZER = 21;    // Buzzer
 static const uint8_t DEAD_PIN = 5;   // Do not use this pin
 
 // Shot detection
-static const uint8_t SHOT_DETECTION = 4;
+static const uint8_t SHOT_DETECTION = 14;
 
 /*******************************************************************************
  * Communications
@@ -38,8 +38,7 @@ static const uint8_t UART_RX = 1;
 
 // SPI Lines
 //static const uint8_t SPI_0_MOSI = 16;
-//static const uint8_t SPI_0_CS = 17;
-//static const uint8_t SPI_0_SCK = 18;
+//static const uint8_t SPI_0_CS = 17;//static const uint8_t SPI_0_SCK = 18;
 //static const uint8_t SPI_0_MISO = 19;
 
 // i2c port 0
