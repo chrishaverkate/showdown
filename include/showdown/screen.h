@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <cstdint>
 
 /** @brief Declares an interface to a basic color screen that supports drawing lines, text, and shapes.
  */

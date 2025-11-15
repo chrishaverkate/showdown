@@ -28,6 +28,10 @@ public:
 	}
 	void draw_circle(uint8_t center_x, uint8_t center_y, uint8_t radius, Color color) override {
 	}
+    void draw_rectangle(uint8_t, uint8_t, uint8_t, uint8_t, Color) override {
+        // new override: make FakeScreen concrete
+        // no-op
+    }
 	unsigned int get_width() override {
 		return 0;
 	}

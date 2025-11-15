@@ -26,10 +26,10 @@ void Timeline::draw() {
 	for (size_t i(_last_shot_count); i < shots.size(); ++i) {
 		_last_shot_count++;
 		auto shot = shots.at(i);
-		printf("\t\tdraw shot %llu\n", shot);
+		printf("\t\tdraw shot %lu\n", shot);
 		snprintf(buffer,
 		         sizeof(buffer),
-		         " %u    %.2f",
+		         " %lu    %.2f",
 		         _last_shot_count,
 		         Session::convert_time_to_seconds(shot));
 
