@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "lm393-custom")(type "KiCad")(uri "${KIPRJMOD}/custom-project-lib.pretty/lm393-custom.kicad_sym")(options "")(descr ""))
+)

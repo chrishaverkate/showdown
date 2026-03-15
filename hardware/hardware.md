@@ -44,91 +44,46 @@ while True:
 
 ```
 
-## LM393 Comparator Description
-### Core idea
-Use a comparator (e.g. LM393) and make its reference voltage adjustable with a potentiometer.
+## Sourcing
+* 1x [LM393](https://www.mouser.com/ProductDetail/Texas-Instruments/LM393BIPWR?qs=OlC7AqGiEDk6Hx8FCoL%252BIg%3D%3D)
+  * [Datasheet](docs/external/lm393.pdf) 
+  * package: TSSOP-8
+  * footprint: same
+  * price: $0.20 
+* 1x [500k Potentiometer](https://www.mouser.com/ProductDetail/Bourns/3386P-DF6-504LF?qs=sGAEpiMZZMukHu%252BjC5l7YewRvTbBNT1xUr5dTHURUsc%3D)
+  * [Datasheet](docs/external/pot-500k.pdf)
+  * package: through hole
+  * footprint: 2-pin header
+* price: $2.48
+* 2x [Diode 1N4148](https://www.mouser.com/ProductDetail/Panjit/1N4148W_R2_00001?qs=sPbYRqrBIVlsNrvmMQOkFA%3D%3D)
+  * [Datasheet](docs/external/diode%20-%201N4148.pdf)
+  * package: SOD-123-2
+  * footprint:
+  * price: $0
+* 1x [1M Ohm Resistor](https://www.amazon.com/AEDIKO-Capacitor-Resistor-Assortment-Resistors/dp/B096Z6H7SV/ref=sr_1_4?sr=8-4)
+  * [Datasheet](docs/external/lm393.pdf)   
+  * package: 1206
+  * footprint: same
+  * price: $6
+* 1x 10k Ohm Resistor
+  * [Datasheet](docs/external/lm393.pdf)
+  * package:
+  * footprint:
+  * price: $0
+* 1x [?uF capacitor](https://www.amazon.com/1206-Capacitor-Kits-16values-Multilayer/dp/B0F5Q8V6BH/ref=sr_1_4?sr=8-4)
+  * [Datasheet](docs/external/lm393.pdf)
+  * package: 1206
+  * footprint: same
+  * price: $8
 
-### Circuit sketch
-* Piezo + front end (same as before):
-  * Piezo → node SENSE
-  * Other piezo lead → GND
-  * 1 MΩ from SENSE to GND
-  * Clamp diodes:
-    * 1N4148 from SENSE to 5 V (anode at SENSE, cathode at 5 V)
-    * 1N4148 from GND to SENSE (anode at GND, cathode at SENSE)
-  * Optional: 10–100 nF from SENSE to GND (smooth the spikes)
-
-Comparator:
-* LM393 power: VCC = 5 V, GND = GND
-  * + input → SENSE (the piezo signal)
-  * – input → VREF (threshold from pot)
-  *Output → 10 kΩ pull-up to 5 V → Arduino digital pin
-* Sensitivity pot (the knob):
-  * Use a 10 kΩ or 50 kΩ pot
-  * One end of pot → 5 V
-  * Other end of pot → GND
-  * Wiper (middle pin) → VREF (the comparator – input)
-
-Now, turning the pot moves VREF between 0 and 5 V:
-* Lower VREF → smaller piezo spike needed → more sensitive
-* Higher VREF → stronger vibration needed → less sensitive
-
-If you want to “invert” that feel (turn clockwise for more sensitive), just swap which end of the pot goes to 5 V and GND.
-
-## LM2904 OpAmp Description
-## Key Points About the LM2904
-- Runs happily from a **single 5 V supply**.
-- Inputs work from **GND up to about VCC – 1.5 V**
-  - (With 5 V supply → usable input range up to ~3.5 V.)
-- Output is **not rail-to-rail**; with 5 V the HIGH level will be **~3–4 V**,  
-  which is still a valid HIGH for an Arduino digital input.
-
-We use **one half** of the LM2904 as a simple comparator:
-
-- **Non-inverting (+) input** = piezo signal
-- **Inverting (–) input** = adjustable threshold (from potentiometer)
-
-## Schematic (Text Description)
-
-### Supply
-- **LM2904 VCC → +5 V (Arduino 5 V)**
-- **LM2904 GND → GND**
-
-## Piezo Front End
-- Piezo lead 1 → `SENSE`
-- Piezo lead 2 → GND
-
-**Conditioning components:**
-- **1 MΩ resistor** from `SENSE` → GND (bias/discharge)
-- **Clamp diodes:**
-  - 1× 1N4148 from `SENSE` → 5 V (anode at SENSE, cathode at 5 V)
-  - 1× 1N4148 from GND → `SENSE` (anode at GND, cathode at SENSE)
-- **Optional:** 10–100 nF capacitor from `SENSE` → GND (smoothing)
-
-## Comparator (LM2904)
-- **LM2904 + input → `SENSE`**
-- **LM2904 – input → `VREF`** (threshold from potentiometer)
-
-## Potentiometer for Adjustable Sensitivity
-Use a **10 kΩ or 50 kΩ potentiometer**:
-
-- One outer pin → 5 V
-- Other outer pin → GND
-- Middle wiper → `VREF` → LM2904 (– input)
-
-**Effect:**
-- Lower VREF → more sensitive (smaller vibration triggers)
-- Higher VREF → less sensitive (requires stronger hit)
-
-## Output to Arduino
-- **LM2904 output → (optional 1 kΩ resistor) → Arduino digital input**
-
-Configure the Arduino pin as a standard digital input or interrupt source.
-
-## Logic Sense
-With the normal wiring (`+` = SENSE, `–` = VREF):
-
-- **If `SENSE` > `VREF` → Output HIGH**
-- **If `SENSE` < `VREF` → Output LOW**
-
-To invert the logic (LOW on vibration spike), simply swap which LM2904 input receives `SENSE` and `VREF`.
+Dev parts
+* 1x 1k Ohm Resistor
+  * [Datasheet](docs/external/lm393.pdf)
+  * package:
+  * footprint:
+  * price: $0
+* 1x green LED
+  * [Datasheet](docs/external/lm393.pdf)
+  * package:
+  * footprint:
+  * price: $0
