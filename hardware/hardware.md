@@ -56,6 +56,8 @@ while True:
   * footprint: 2-pin header
 * price: $2.48
 * 2x [Diode 1N4148](https://www.mouser.com/ProductDetail/Panjit/1N4148W_R2_00001?qs=sPbYRqrBIVlsNrvmMQOkFA%3D%3D)
+  * [Alt diode 1n4148](https://www.mouser.com/ProductDetail/Diotec-Semiconductor/1N4148W?qs=OlC7AqGiEDmsbkbAeXQtXg%3D%3D)
+    * [Datasheet](docs/external/diode%20-%201N4148f.pdf)
   * [Datasheet](docs/external/diode%20-%201N4148.pdf)
   * package: SOD-123-2
   * footprint:

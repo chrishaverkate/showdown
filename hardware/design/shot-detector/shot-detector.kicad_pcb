@@ -72,7 +72,7 @@
 			(subtractmaskfromsilk no)
 			(outputformat 1)
 			(mirror no)
-			(drillshape 1)
+			(drillshape 0)
 			(scaleselection 1)
 			(outputdirectory "")
 		)
@@ -2110,7 +2110,7 @@
 			(width 0.2)
 			(type solid)
 		)
-		(layer "Dwgs.User")
+		(layer "Cmts.User")
 		(uuid "39e4107e-194a-48e7-8972-2b5707a1d62c")
 	)
 	(gr_line
@@ -2162,6 +2162,19 @@
 		)
 		(layer "Edge.Cuts")
 		(uuid "c79d30b0-6092-4829-a286-5195a9d0818b")
+	)
+	(gr_text "v1"
+		(at 54.55 80.45 0)
+		(layer "B.SilkS")
+		(uuid "782a2726-db78-46ad-8380-4152c1ac5168")
+		(effects
+			(font
+				(size 1.5 1.5)
+				(thickness 0.3)
+				(bold yes)
+			)
+			(justify left bottom mirror)
+		)
 	)
 	(via
 		(at 61.1 90.1)
